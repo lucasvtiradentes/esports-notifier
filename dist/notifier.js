@@ -2,14 +2,26 @@
 const CONFIGS = {
     timeToSendEmail: '07:00',
     diffHoursFromUtc: -3,
-    favoriteTeams: ['loud', 'mibr', 'imperial', 'syko']
+    favoriteTeams: ['loud', 'mibr', 'imperial', 'syko'],
+    strictComparasion: true,
+    games: {
+        dota: true,
+        lol: true,
+        rocketLeague: true,
+        csgo: true,
+        valorant: true,
+        rainbowSixSiege: true,
+        freeFire: true,
+        callOfDuty: true,
+        overwatch: true
+    }
 };
 function check() {
     const csgoMatches = getCsgoMatches();
     const r6Matches = getR6Matches();
     const valorantMatches = getValorantMatches();
     const allMatches = [...csgoMatches, ...r6Matches, ...valorantMatches];
-    const favoriteTeamsMatches = allMatches.filter(item => item.teams.some(matchTeam => CONFIGS.favoriteTeams.includes(matchTeam.toLowerCase())));
+    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => CONFIGS.favoriteTeams.includes(matchTeam.toLowerCase())));
     console.log(favoriteTeamsMatches);
     console.log(allMatches.length);
     console.log(favoriteTeamsMatches.length);
@@ -26,12 +38,12 @@ function getCsgoMatches() {
     const csgoMatches = $('table.infobox_matches_content');
     const getTeamName = (item) => {
         var _a, _b;
-        const foundItem = item.children.find(it => { var _a; return ((_a = it.attribs) === null || _a === void 0 ? void 0 : _a.class.search('team-template-text')) > -1; });
+        const foundItem = item.children.find((it) => { var _a; return ((_a = it.attribs) === null || _a === void 0 ? void 0 : _a.class.search('team-template-text')) > -1; });
         return (_b = (_a = foundItem === null || foundItem === void 0 ? void 0 : foundItem.children[0]) === null || _a === void 0 ? void 0 : _a.children[0]) === null || _b === void 0 ? void 0 : _b.data;
     };
     const getTeamImage = (item) => {
         var _a, _b, _c;
-        const foundItem = item.children.find(it => { var _a; return ((_a = it.attribs) === null || _a === void 0 ? void 0 : _a.class.search('team-template-image-icon')) > -1; });
+        const foundItem = item.children.find((it) => { var _a; return ((_a = it.attribs) === null || _a === void 0 ? void 0 : _a.class.search('team-template-image-icon')) > -1; });
         return (_c = (_b = (_a = foundItem === null || foundItem === void 0 ? void 0 : foundItem.children[0]) === null || _a === void 0 ? void 0 : _a.children[0]) === null || _b === void 0 ? void 0 : _b.attribs) === null || _c === void 0 ? void 0 : _c.src;
     };
     const matchesInfoArr = Array.from(csgoMatches).map((item) => {
@@ -49,7 +61,7 @@ function getCsgoMatches() {
         const teamBImage = getTeamImage(teamBElement);
         const teamBCountryImage = '';
         const gameInfo = {
-            game: 'counter_strike_global_offensive',
+            game: 'csgo',
             teamA: {
                 name: teamAName,
                 image: `${LIQUEDPEDIA_LINK}${teamAImage}`,
@@ -89,7 +101,7 @@ function getR6Matches() {
         const teamBImage = item.children[1].children[2].children[0].children[0].attribs.src;
         const teamBCountryImage = item.children[1].children[2].children[0].children[1].children[0].attribs.src;
         const gameInfo = {
-            game: 'rainbow_six_siege',
+            game: 'rainbowSixSiege',
             teamA: {
                 name: teamAName,
                 image: teamAImage,
