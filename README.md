@@ -65,6 +65,8 @@ The only thing you need to use this solution is a `gmail/google account`.
 
 To effectively use this project, do the following steps:
 
+In order to use install this tool: https://github.com/tani/cheeriogs
+
 <details>
   <summary>1 - create a Google Apps Scripts (GAS) project</summary>
   <div>

@@ -1,0 +1,27 @@
+{
+  "name": "esports-notifier",
+  "description": "🔔 get email notifications informing when one of your favorite team has a game ",
+  "version": "1.7.1",
+  "license": "MIT",
+  "author": {
+    "name": "Lucas Vieira",
+    "email": "lucasvtiradentes@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucasvtiradentes/esports-notifier.git"
+  },
+  "main": "./dist/EsportsNotifier.min.js",
+  "scripts": {
+    "start": "node ./dist/EsportsNotifier.min.js",
+    "dev": "tsx ./src/index.ts",
+    "build": "rimraf ./dist && tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "tsx": "^3.12.6",
+    "rimraf": "^4.0.4",
+    "minify": "^7.2.2",
+    "@types/google-apps-script": "^1.0.57"
+  }
+}
