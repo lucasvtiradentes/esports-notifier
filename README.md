@@ -47,7 +47,7 @@
 Get email notifications informing when one of your favorite team has a game in [csgo](https://www.counter-strike.net/news), [valorant](https://playvalorant.com/en-us/) or [rainbow six siege](https://www.ubisoft.com/en-us/game/rainbow-six/siege).
 
 <div align="center">
-<img src="./.github/images/demo.webp" width="80%" >
+  <!-- <img src="./.github/images/demo.webp" width="80%" > -->
 </div>
 
 ## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
@@ -150,20 +150,6 @@ In order to use install this tool: https://github.com/tani/cheeriogs
 ## License
 
 This project is distributed under the terms of the MIT License Version 2.0. A complete version of the license is available in the [LICENSE](LICENSE) file in this repository. Any contribution made to this project will be licensed under the MIT License Version 2.0.
-
-## Contributing
-
-If you are a typescript developer, we would kind and happy accept your help:
-
-- The best way to get started is to select any issue from the [`good-first-issue`](https://github.com/lucasvtiradentes/twitch-notifier/issues) label;
-- If you would like to contribute, please review our [Contributing guide](docs/CONTRIBUTING.md) for all relevant details.
-
-Another ways to positivily impact this project is to:
-
-- **:star: Star this repository**: my goal is to impact the maximum number of developers around the world;
-- ✍️ **Fix english mistakes** I might have made in this project, may it be in the DOCS or even in the code (I'm a portuguese natural speaker);
-- [:heart: Say thanks](https://saythanks.io/to/lucasvtiradentes): kind words have a huge impact in anyone's life;
-- [💰 Donate](https://github.com/sponsors/lucasvtiradentes): if you want to support my work even more, consider make a small donation. I would be really happy!
 
 ## Feedback
 

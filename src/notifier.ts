@@ -2,11 +2,21 @@ type Configs = {
   timeToSendEmail: string;
   diffHoursFromUtc: number;
   favoriteTeams: string[]
+  strictComparasion: boolean;
+  games: {
+    csgo: boolean;
+    valorant: boolean;
+    rainbowSixSiege: boolean;
+    dota: boolean;
+    lol: boolean;
+    rocketLeague: boolean;
+    overwatch: boolean;
+    callOfDuty: boolean;
+    freeFire: boolean;
+  }
 }
 
-type CheerioItem = any
-
-type Games = 'valorant' | 'rainbow_six_siege' | 'counter_strike_global_offensive'
+type Games = keyof Configs['games']
 
 type Game = {
   game: Games
@@ -27,12 +37,26 @@ type Game = {
   link: string
 }
 
+type CheerioItem = any
+
 /* -------------------------------------------------------------------------- */
 
 const CONFIGS: Configs = {
   timeToSendEmail: '07:00',
   diffHoursFromUtc: -3,
-  favoriteTeams: ['loud', 'mibr', 'imperial', 'syko']
+  favoriteTeams: ['loud', 'mibr', 'imperial', 'syko'],
+  strictComparasion: true,
+  games: {
+    dota: true,
+    lol: true,
+    rocketLeague: true,
+    csgo: true,
+    valorant: true,
+    rainbowSixSiege: true,
+    freeFire: true,
+    callOfDuty: true,
+    overwatch: true
+  }
 }
 
 function check() {
@@ -88,7 +112,7 @@ function getCsgoMatches(){
     const teamBCountryImage = ''
 
     const gameInfo: Game = {
-      game: 'counter_strike_global_offensive',
+      game: 'csgo',
       teamA: {
         name: teamAName,
         image: `${LIQUEDPEDIA_LINK}${teamAImage}`,
@@ -134,7 +158,7 @@ function getR6Matches(){
     const teamBCountryImage = item.children[1].children[2].children[0].children[1].children[0].attribs.src
 
     const gameInfo: Game = {
-      game: 'rainbow_six_siege',
+      game: 'rainbowSixSiege',
       teamA: {
         name: teamAName,
         image: teamAImage,
