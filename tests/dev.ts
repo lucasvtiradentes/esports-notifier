@@ -1,11 +1,5 @@
-import GcalSync from './export-gcal';
-import { gcalSyncConfig } from './gcal-config';
+import EsportsNotifier from './export-lib';
+import { config } from './lib-config';
 
-const gcalsync = new GcalSync(gcalSyncConfig);
-console.log(gcalsync);
-
-// gcalsync.sync();
-// gcalsync.showTodayEventsStats();
-// gcalsync.cleanTodayEventsStats();
-// gcalsync.installGcalSync();
-// gcalsync.uninstallGcalSync();
+const esportsNotifier = new EsportsNotifier(config);
+console.log(esportsNotifier);

@@ -1,7 +1,7 @@
 {
   "name": "esports-notifier",
   "description": "🔔 get email notifications informing when one of your favorite team has a game ",
-  "version": "1.7.1",
+  "version": "0.0.1",
   "license": "MIT",
   "author": {
     "name": "Lucas Vieira",
@@ -14,12 +14,11 @@
   "main": "./dist/EsportsNotifier.min.js",
   "scripts": {
     "start": "node ./dist/EsportsNotifier.min.js",
-    "dev": "tsx ./src/index.ts",
-    "build": "rimraf ./dist && tsc",
+    "dev": "tsx ./tests/dev.ts",
+    "build": "rimraf ./dist && tsc && npm run scripts:postbuild",
     "test": "jest --passWithNoTests --verbose",
     "pub": "semantic-release",
     "pub:check": "npm publish --dry-run",
-    "pub:build": "npm pack && tar -xvzf *.tgz",
     "prepare": "husky install",
     "commit": "cz",
     "lint:staged": "lint-staged --concurrent false --quiet",
@@ -27,23 +26,25 @@
   },
   "devDependencies": {
     "@types/google-apps-script": "^1.0.57",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "commitizen": "^4.3.0",
     "commitizen-emoji": "^1.0.5",
-    "prettier": "^2.8.4",
     "eslint": "^8.31.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4",
+    "lint-staged": "^13.1.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
-    "lint-staged": "^13.1.0",
-    "ts-jest": "^29.0.5",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.3.1",
+    "ts-jest": "^29.0.5",
     "husky": "^8.0.3",
     "minify": "^7.2.2",
-    "typescript": "^5.0.4",
+    "rimraf": "^4.3.1",
     "tsx": "^3.12.6",
-    "rimraf": "^4.0.4"
+    "typescript": "^4.3.0"
   }
 }
