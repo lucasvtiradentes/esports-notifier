@@ -25,7 +25,9 @@
       <li>
         <a href="#bulb-usage">Usage</a>
         <ul>
+          <li><a href="#how-it-works">How it works?</a></li>
           <li><a href="#installation">Installation</a></li>
+          <li><a href="#uninstall">Uninstall</a></li>
         </ul>
       </li>
       <li>
@@ -44,16 +46,43 @@
 
 ## :trumpet: Overview
 
-Get email notifications informing when one of your favorite team has a game in [csgo](https://www.counter-strike.net/news), [valorant](https://playvalorant.com/en-us/) or [rainbow six siege](https://www.ubisoft.com/en-us/game/rainbow-six/siege).
+Get a daily email informing what are the today matches of your favorite teams in a bunche of esports games, including [csgo](https://www.counter-strike.net/), [valorant](https://playvalorant.com/) and [league of legends](https://www.leagueoflegends.com/).
 
 <div align="center">
-  <img src="./.github/images/demo.png" width="80%" >
+  <table align="center">
+    <thead>
+      <tr>
+        <td><p align="center">Desktop view</p></td>
+        <td><p align="center">Mobile view</p></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img width="100%" src="./.github/images/desktop.png"></td>
+        <td><img width="200px" src="./.github/images/mobile.jpeg"></td>
+      </tr>
+    </tbody>
+ </table>
 </div>
 
 ## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
-&nbsp;&nbsp;&nbsp;✔️ send an email if your favorite teams has a game in the current date;<br>
-&nbsp;&nbsp;&nbsp;✔️ choose the time to send the email;<br>
+&nbsp;&nbsp;&nbsp;✔️ get daily email informing what are your favorite teams today matches;<br>
+&nbsp;&nbsp;&nbsp;✔️ select the games you are interested in to check for matches;<br>
+&nbsp;&nbsp;&nbsp;✔️ specify the time to send the daily email;<br>
+&nbsp;&nbsp;&nbsp;✔️ option to informe matches about only the current date or also from the following days.<br>
+
+Also it is worth mentioning that the tool informs about the following games:
+
+- [x] [counter-strike global offense](https://liquipedia.net/counterstrike/Liquipedia:Matches)
+- [x] [valorant](https://www.vlr.gg/matches)
+- [x] [rainbow six siege](https://siege.gg/matches)
+<!-- - [ ] overwatch 2
+- [ ] dota 2
+- [ ] league of legends
+- [ ] free fire
+- [ ] rocket league
+- [ ] call of duty -->
 
 ## :warning: Requirements<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
@@ -61,11 +90,17 @@ The only thing you need to use this solution is a `gmail/google account`.
 
 ## :bulb: Usage<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
+### How it works
+
+It basically sets a function to run in google apps scripts to run everyday at a specified time, and this function is responsable for:
+
+- get all the the matches scheduled for the next couple of days in all games that you're interested in;
+- filter the matches list to get only the ones about your favorite teams;
+- if there's at least one game of your favorite teams, send you an email about informing the details.
+
 ### Installation
 
 To effectively use this project, do the following steps:
-
-In order to use install this tool: https://github.com/tani/cheeriogs
 
 <details>
   <summary>1 - create a Google Apps Scripts (GAS) project</summary>
@@ -142,6 +177,12 @@ In order to use install this tool: https://github.com/tani/cheeriogs
     <p align="center"><img width="500" src="./.github/images/tutorial/tut6.webp" /></p>
   </div>
 </details>
+
+### Uninstall
+
+If you want to receive the daily emails, just go to the GAS respective project and run the function called "uninstall".
+
+By doing that, the GAS trigger responsable for running everyday the function will be deleted.
 
 <a href="#"><img src="./.github/images/divider.png" /></a>
 

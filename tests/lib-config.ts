@@ -2,15 +2,15 @@ export const config = {
   esports: {
     favoriteTeams: ['loud', 'mibr', 'imperial', 'syko'],
     games: {
-      dota: false,
-      lol: false,
-      rocketLeague: false,
       csgo: true,
       valorant: true,
       rainbowSixSiege: true,
-      freeFire: false,
+      dota: false,
+      lol: false,
+      rocketLeague: false,
+      overwatch: false,
       callOfDuty: false,
-      overwatch: false
+      freeFire: false
     }
   },
   datetime: {
