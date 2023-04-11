@@ -30,8 +30,11 @@ type Config = {
 type Games = keyof Config['esports']['games'];
 
 type Game = {
-  game: Games;
-  gameLink: string;
+  game: {
+    name: Games;
+    image: string;
+    link: string;
+  };
   teamA: {
     name: string;
     image: string;
@@ -191,8 +194,11 @@ class EsportsNotifier {
         const teamBCountryImage = '';
 
         const gameInfo: Game = {
-          game: 'csgo',
-          gameLink: CSGO_API,
+          game: {
+            name: 'csgo',
+            image: 'https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png',
+            link: CSGO_API
+          },
           teamA: {
             name: teamAName,
             image: `${LIQUEDPEDIA_LINK}${teamAImage}`,
@@ -240,8 +246,11 @@ class EsportsNotifier {
       const teamBCountryImage = item.children[1].children[2].children[0].children[1].children[0].attribs.src;
 
       const gameInfo: Game = {
-        game: 'rainbowSixSiege',
-        gameLink: RAINBOW_SIX_SIEGE_MATCHES_PAGE,
+        game: {
+          name: 'rainbowSixSiege',
+          image: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png',
+          link: RAINBOW_SIX_SIEGE_MATCHES_PAGE
+        },
         teamA: {
           name: teamAName,
           image: teamAImage,
@@ -295,17 +304,20 @@ class EsportsNotifier {
       const teamBCountryImage = item.children[3].children[3].children[1].children[1].children[1].attribs.class.replace('flag ', '');
 
       const gameInfo: Game = {
-        game: 'valorant',
-        gameLink: valorantMatchesPage,
+        game: {
+          name: 'valorant',
+          image: 'https://seeklogo.com/images/V/valorant-logo-FAB2CA0E55-seeklogo.com.png',
+          link: valorantMatchesPage
+        },
         teamA: {
           name: teamAName,
           image: teamAImage,
-          countryImage: teamACountryImage
+          countryImage: `${vlrgg}/img/icons/flags/16/${teamACountryImage.replace('mod-', '')}.png`
         },
         teamB: {
           name: teamBName,
           image: teamBImage,
-          countryImage: teamBCountryImage
+          countryImage: `${vlrgg}/img/icons/flags/16/${teamBCountryImage.replace('mod-', '')}.png`
         },
         teams: [teamAName, teamBName],
         date: matchDate,
@@ -379,52 +391,77 @@ class EsportsNotifier {
 
   /* SEND EMAIL FUNCTIONS =================================================== */
 
-  private generateEmailContent(todayGames: Game[]) {
+  private generateEmailContent(gamesToInform: Game[]) {
     let emailHtml = '';
 
-    const tableStyle = `style="border: 1px solid #333; width: 90%"`;
-    const tableRowStyle = `style="width: 100%; text-align: center;"`;
-    const tableRowColumnStyle = `style="border: 1px solid #333"`;
+    const tableStyle = `border: 1px solid #333; width: 90%`;
+    const rowStyle = `text-align: center;`;
+    const columnStyle = `border: 1px solid #333; white-space: nowrap; padding: 10px;`;
 
     // prettier-ignore
-    const header = `<tr ${tableRowStyle}">\n
-                      <th ${tableRowColumnStyle} width="100px">Time</th>
-                      <th ${tableRowColumnStyle} width="100px">Game</th>
-                      <th ${tableRowColumnStyle} width="300px">Match</th>\n
+    const header = `<tr style="${rowStyle}">
+                      <th style="${columnStyle}">Time</th>
+                      <th style="${columnStyle}">Match</th>
+                      <th style="${columnStyle}">Game</th>
                     </tr>`;
 
     const getTableBodyItemsHtml = () => {
-      return todayGames
+      return gamesToInform
         .map((item) => {
           // prettier-ignore
 
-          const coloumns = [
-            `<div style="text-align: center;"><p>${this.config.settings.notifyOnlyAboutTodayGames ? item.date : `${item.date} - ${item.time}`}</p></div>`,
-            `<div style="text-align: center;"><a href="${item.gameLink}">${item.game}</a></div>`,
-            `<a href="${item.link}">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 150px;">
-                <div style="width: 100%;">
-                  ${item.teamA.image === '' ? '' : `<img src="${item.teamA.image}" width="20px" height="20px">`}
-                  <p>${item.teamA.name}</p>
-                </div>
-                <div style="width: 100%;">
-                  ${item.teamB.image === '' ? '' : `<img src="${item.teamB.image}" width="20px" height="20px">`}
-                  <p>${item.teamB.name}</p>
-                </div>
-              </div>
-              <p>${item.event}</p>
-            </a>`
-          ];
-          const row = `<tr ${tableRowStyle}">\n${coloumns.map((it) => `<td ${tableRowColumnStyle}>&nbsp;&nbsp;${it}</td>`).join('\n')}\n</tr>`;
-          return row;
+          const teamAImage = item.teamA.image || item.teamA.countryImage || '';
+          const teamBImage = item.teamB.image || item.teamB.countryImage || '';
+          console.log(teamAImage);
+
+          const itemRow = `<tr style="${rowStyle}">
+                            <td style="${columnStyle}">
+                              <div style="text-align: center;">${this.config.settings.notifyOnlyAboutTodayGames ? `<p style="white-space: nowrap;">${item.time}</p>` : `<p style="white-space: nowrap;">${item.date}</p><p style="white-space: nowrap;">${item.time}</p>`}</div>
+                            </td>
+                            <td style="${columnStyle}">
+                              <a href="${item.link}">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 150px;">
+                                  <div style="width: 100%;">
+                                    ${teamAImage === '' ? '' : `<img src="${teamAImage}" width="20px" height="20px">`}
+                                    <p>${item.teamA.name}</p>
+                                  </div>
+                                  <div style="width: 100%;">
+                                    ${teamBImage === '' ? '' : `<img src="${teamBImage}" width="20px" height="20px">`}
+                                    <p>${item.teamB.name}</p>
+                                  </div>
+                                </div>
+                                <p style="word-wrap: break-word;">${item.event}</p>
+                              </a>
+                            </td>
+                            <td style="${columnStyle}">
+                              <div style="text-align: center;">
+                                <a href="${item.game.link}">
+                                  <img width="50px" height="50px" src="${item.game.image}"><br>
+                                  <p>${item.game.name}</p>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>`;
+          return itemRow;
         })
         .join('');
     };
 
-    const table = `<center>\n<table ${tableStyle}>\n${header}\n${getTableBodyItemsHtml()}\n</table>\n</center>`;
+    // prettier-ignore
+    const table = `<center>
+                    <table style="${tableStyle}">
+                      <colgroup>
+                        <col span="1" style="width: 20%;">
+                        <col span="1" style="width: 60%;">
+                        <col span="1" style="width: 20%;">
+                      </colgroup>
+                      <thead>${header}</thead>
+                      <tbody>${getTableBodyItemsHtml()}</tbody>
+                    </table>
+                  </center>`;
 
     emailHtml = emailHtml + `Hi,<br><br>\n`;
-    emailHtml = emailHtml + `there are ${todayGames.length} games for ${this.config.settings.notifyOnlyAboutTodayGames ? 'today' : 'the next couple of days'}: <br><br>\n`;
+    emailHtml = emailHtml + `there ${gamesToInform.length === 1 ? 'is' : 'are'} <b>${gamesToInform.length} ${gamesToInform.length === 1 ? 'game' : 'games'}</b> of your favorite teams ${this.config.settings.notifyOnlyAboutTodayGames ? 'today' : 'soon'}: <br><br>\n`;
     emailHtml = emailHtml + `${table}<br>\n`;
     emailHtml = emailHtml + `Regards, <br>your <a href="https://github.com/${this.GITHUB_REPOSITORY}#readme"><b>${this.APPNAME}</b></a> bot`;
 
@@ -440,7 +477,7 @@ class EsportsNotifier {
 
     MailApp.sendEmail({
       to: this.USER_EMAIL,
-      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} games ${this.config.settings.notifyOnlyAboutTodayGames ? `for ${this.TODAY_DATE}` : 'of your favorite teams soon'}`,
+      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} ${favoriteTeamsMatches.length === 1 ? 'game' : 'games'} of your favorite teams ${this.config.settings.notifyOnlyAboutTodayGames ? `${this.TODAY_DATE}` : 'soon'}`,
       htmlBody: this.generateEmailContent(favoriteTeamsMatches)
     });
   }
