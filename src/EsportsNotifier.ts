@@ -110,9 +110,18 @@ class EsportsNotifier {
     }
   }
 
-  private logger(message: string) {
+  private logger(message: string, newLine?: 'before' | 'after') {
     this.SESSION_LOGS.push(message);
+
+    if (newLine === 'before') {
+      console.log('');
+    }
+
     console.log(message);
+
+    if (newLine === 'after') {
+      console.log('');
+    }
   }
 
   /* HELPER FUNCTIONS ======================================================= */
@@ -353,8 +362,7 @@ class EsportsNotifier {
     }
 
     this.todayMatches = allMatches;
-    this.logger('');
-    this.logger(`there were found ${this.todayMatches.length} matches across all selected games`);
+    this.logger(`there were found ${this.todayMatches.length} matches across all selected games`, 'before');
 
     return this.todayMatches;
   }
@@ -468,8 +476,8 @@ class EsportsNotifier {
     const allMatches = this.getAllTodayMatches();
     const favoriteTeamsMatches = this.getFavoriteTeamsMatches(allMatches);
     const onlyTodayMatches = favoriteTeamsMatches.filter((game) => game.date === this.TODAY_DATE);
-    this.logger(`there were found ${onlyTodayMatches.length} of your favorite teams today`);
+    this.logger(`there were found ${onlyTodayMatches.length} of your favorite teams today`, 'after');
 
-    this.sendEmail(favoriteTeamsMatches);
+    this.sendEmail(onlyTodayMatches);
   }
 }
