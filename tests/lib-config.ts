@@ -18,6 +18,7 @@ export const config = {
     diffHoursFromUtc: -3
   },
   settings: {
+    notifyOnlyAboutTodayGames: true,
     strictTeamComparasion: false,
     maintanceMode: false,
     loopFunction: 'checkTodayGames'

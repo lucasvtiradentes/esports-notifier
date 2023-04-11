@@ -20,6 +20,7 @@ type Config = {
     timeToSendEmail: string;
   };
   settings: {
+    notifyOnlyAboutTodayGames: boolean;
     strictTeamComparasion: boolean;
     maintanceMode: boolean;
     loopFunction: string;
@@ -89,7 +90,7 @@ class EsportsNotifier {
       { objToCheck: config?.esports, requiredKeys: ['favoriteTeams', 'games'], name: 'configs.esports' },
       { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'dota', 'lol', 'rocketLeague', 'overwatch', 'callOfDuty', 'freeFire'], name: 'configs.esports.games' },
       { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromUtc', 'timeToSendEmail'], name: 'configs.datetime' },
-      { objToCheck: config?.settings, requiredKeys: ['strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
+      { objToCheck: config?.settings, requiredKeys: ['notifyOnlyAboutTodayGames', 'strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
     ];
 
     validationArr.forEach((item) => {
@@ -361,7 +362,7 @@ class EsportsNotifier {
       // allMatches.push(...[]);
     }
 
-    this.todayMatches = allMatches;
+    this.todayMatches = allMatches.sort((a, b) => Number(new Date(`${a.date}T${a.time}`)) - Number(new Date(`${b.date}T${b.time}`)));
     this.logger(`there were found ${this.todayMatches.length} matches across all selected games`, 'before');
 
     return this.todayMatches;
@@ -398,7 +399,7 @@ class EsportsNotifier {
           // prettier-ignore
 
           const coloumns = [
-            `<div style="text-align: center;"><p>${item.time}</p></div>`,
+            `<div style="text-align: center;"><p>${this.config.settings.notifyOnlyAboutTodayGames ? item.date : `${item.date} - ${item.time}`}</p></div>`,
             `<div style="text-align: center;"><a href="${item.gameLink}">${item.game}</a></div>`,
             `<a href="${item.link}">
               <div style="display: flex; align-items: center; justify-content: center; gap: 150px;">
@@ -423,7 +424,7 @@ class EsportsNotifier {
     const table = `<center>\n<table ${tableStyle}>\n${header}\n${getTableBodyItemsHtml()}\n</table>\n</center>`;
 
     emailHtml = emailHtml + `Hi,<br><br>\n`;
-    emailHtml = emailHtml + `there are ${todayGames.length} games for today: <br><br>\n`;
+    emailHtml = emailHtml + `there are ${todayGames.length} games for ${this.config.settings.notifyOnlyAboutTodayGames ? 'today' : 'the next couple of days'}: <br><br>\n`;
     emailHtml = emailHtml + `${table}<br>\n`;
     emailHtml = emailHtml + `Regards, <br>your <a href="https://github.com/${this.GITHUB_REPOSITORY}#readme"><b>${this.APPNAME}</b></a> bot`;
 
@@ -439,7 +440,7 @@ class EsportsNotifier {
 
     MailApp.sendEmail({
       to: this.USER_EMAIL,
-      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} games for ${this.TODAY_DATE}`,
+      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} games ${this.config.settings.notifyOnlyAboutTodayGames ? `for ${this.TODAY_DATE}` : 'of your favorite teams soon'}`,
       htmlBody: this.generateEmailContent(favoriteTeamsMatches)
     });
   }
@@ -478,6 +479,7 @@ class EsportsNotifier {
     const onlyTodayMatches = favoriteTeamsMatches.filter((game) => game.date === this.TODAY_DATE);
     this.logger(`there were found ${onlyTodayMatches.length} of your favorite teams today`, 'after');
 
-    this.sendEmail(onlyTodayMatches);
+    const matchesToNotify = this.config.settings.notifyOnlyAboutTodayGames ? onlyTodayMatches : favoriteTeamsMatches;
+    this.sendEmail(matchesToNotify);
   }
 }
