@@ -47,7 +47,7 @@
 Get email notifications informing when one of your favorite team has a game in [csgo](https://www.counter-strike.net/news), [valorant](https://playvalorant.com/en-us/) or [rainbow six siege](https://www.ubisoft.com/en-us/game/rainbow-six/siege).
 
 <div align="center">
-  <!-- <img src="./.github/images/demo.webp" width="80%" > -->
+  <img src="./.github/images/demo.png" width="80%" >
 </div>
 
 ## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
