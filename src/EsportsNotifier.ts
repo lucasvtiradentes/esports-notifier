@@ -1,24 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type Config = {
-  timeToSendEmail: string;
-  diffHoursFromUtc: number;
-  favoriteTeams: string[];
-  strictComparasion: boolean;
-  games: {
-    csgo: boolean;
-    valorant: boolean;
-    rainbowSixSiege: boolean;
-    dota: boolean;
-    lol: boolean;
-    rocketLeague: boolean;
-    overwatch: boolean;
-    callOfDuty: boolean;
-    freeFire: boolean;
+  esports: {
+    favoriteTeams: string[];
+    games: {
+      csgo: boolean;
+      valorant: boolean;
+      rainbowSixSiege: boolean;
+      dota: boolean;
+      lol: boolean;
+      rocketLeague: boolean;
+      overwatch: boolean;
+      callOfDuty: boolean;
+      freeFire: boolean;
+    };
+  };
+  datetime: {
+    diffHoursFromUtc: number;
+    timeToSendEmail: string;
+  };
+  settings: {
+    strictTeamComparasion: boolean;
+    maintanceMode: boolean;
+    loopFunction: string;
   };
 };
 
-type Games = keyof Config['games'];
+type Games = keyof Config['esports']['games'];
 
 type Game = {
   game: Games;
@@ -56,7 +64,8 @@ class EsportsNotifier {
   ENVIRONMENT = this.detectEnvironment();
   USER_EMAIL = this.ENVIRONMENT === 'production' ? this.getUserEmail() : '';
   ERRORS = {
-    mustSpecifyConfig: 'You must specify the settings when starting the class'
+    mustSpecifyConfig: 'You must specify the settings when starting the class',
+    timeToSendEmailIncorrect: 'You must specify a correct time string in config.datetime.timeToSendEmail, such as: 07:00'
   };
   public todayMatches: Game[] = [];
   public todayFavoriteTeamsMatches: Game[] = [];
@@ -64,7 +73,7 @@ class EsportsNotifier {
   constructor(public config: Config) {
     this.validateConfigs(config);
     this.config = config;
-    this.TODAY_DATE = this.getDateFixedByTimezone(this.config.diffHoursFromUtc).toISOString().split('T')[0];
+    this.TODAY_DATE = this.getDateFixedByTimezone(new Date(), this.config.datetime.diffHoursFromUtc).toISOString().split('T')[0];
 
     this.logger(`${this.APPNAME} is running at version ${this.VERSION} in ${this.ENVIRONMENT} environment`);
     this.logger(`check the docs for your version here: ${`https://github.com/${this.GITHUB_REPOSITORY}/tree/v${this.VERSION}#readme`}`);
@@ -76,8 +85,11 @@ class EsportsNotifier {
     }
 
     const validationArr = [
-      { objToCheck: config, requiredKeys: ['timeToSendEmail', 'diffHoursFromUtc', 'favoriteTeams', 'strictComparasion', 'games'], name: 'configs' },
-      { objToCheck: config.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'dota', 'lol', 'rocketLeague', 'overwatch', 'callOfDuty', 'freeFire'], name: 'configs.games' }
+      { objToCheck: config, requiredKeys: ['esports', 'datetime', 'settings'], name: 'configs' },
+      { objToCheck: config?.esports, requiredKeys: ['favoriteTeams', 'games'], name: 'configs.esports' },
+      { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'dota', 'lol', 'rocketLeague', 'overwatch', 'callOfDuty', 'freeFire'], name: 'configs.esports.games' },
+      { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromUtc', 'timeToSendEmail'], name: 'configs.datetime' },
+      { objToCheck: config?.settings, requiredKeys: ['strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
     ];
 
     validationArr.forEach((item) => {
@@ -105,8 +117,7 @@ class EsportsNotifier {
 
   /* HELPER FUNCTIONS ======================================================= */
 
-  private getDateFixedByTimezone(timeZoneIndex: number) {
-    const date = new Date();
+  private getDateFixedByTimezone(date: Date, timeZoneIndex: number) {
     date.setHours(date.getHours() + timeZoneIndex);
     return date;
   }
@@ -156,11 +167,11 @@ class EsportsNotifier {
     const matchesInfoArr = Array.from(csgoMatches)
       .filter((item: CheerioItem) => item.parent.attribs['data-toggle-area-content'] === '1')
       .map((item: CheerioItem) => {
-        const dateTime = item.children[1].children[2].children[1].children[0].children[0].children[0].data;
+        const dateTime = this.getDateFixedByTimezone(new Date(item.children[1].children[2].children[1].children[0].children[0].children[0].data.replace('- ', '')), this.config.datetime.diffHoursFromUtc).toISOString();
         const teamAElement = item.children[1].children[0].children[1].children[0];
         const teamBElement = item.children[1].children[0].children[5].children[0];
-        const matchDate = dateTime.split(' - ')[0];
-        const matchTime = dateTime.split(' - ')[1];
+        const matchDate = dateTime.split('T')[0];
+        const matchTime = dateTime.split('T')[1].slice(0, 5);
         const event = item.children[1].children[2].children[1].children[1].children[0].children[0].children[0].data;
         const teamAName = getTeamName(teamAElement);
         const teamAImage = getTeamImage(teamAElement);
@@ -192,6 +203,8 @@ class EsportsNotifier {
         return gameInfo;
       });
 
+    this.logger(`found ${matchesInfoArr.length} csgo matches`);
+
     return matchesInfoArr;
   }
 
@@ -203,9 +216,10 @@ class EsportsNotifier {
 
     const r6Matches = $('a.match--awaiting-results'); // match--has-results
     const matchesInfoArr = Array.from(r6Matches).map((item: CheerioItem) => {
-      // const dateTime = item.children[0].attribs['data-time']
-      const matchDate = item.children[0].children[0].children[0].data;
-      const matchTime = item.children[0].children[1].children[0].data;
+      const dateTimeFixedStr = this.getDateFixedByTimezone(new Date(item.children[0].attribs['data-time']), this.config.datetime.diffHoursFromUtc).toISOString();
+
+      const matchDate = dateTimeFixedStr.split('T')[0];
+      const matchTime = dateTimeFixedStr.split('T')[1].slice(0, 5);
       const event = item.children[0].children[2].children[0].data;
       const link = item.attribs.href;
       const teamAName = item.children[1].children[0].children[0].children[2].children[0].data.trim();
@@ -238,6 +252,7 @@ class EsportsNotifier {
       return gameInfo;
     });
 
+    this.logger(`found ${matchesInfoArr.length} rainbowSixSiege matches`);
     return matchesInfoArr;
   }
 
@@ -249,9 +264,18 @@ class EsportsNotifier {
 
     const valorantMatches = $('a.match-item');
 
+    const getParsedTime = (item: string) => {
+      const [time, turn] = item.split(' ');
+      const timeArr = time.split(':');
+      const hourFixedByTurn = turn === 'AM' ? Number(timeArr[0]) : Number(timeArr[0]) + 12;
+      const hourFixedByVlrggTime = hourFixedByTurn + 2;
+      const finalTime = `${hourFixedByVlrggTime}:${timeArr[1]}`;
+      return finalTime.length === 4 ? `0${finalTime}` : finalTime;
+    };
+
     const matchesInfoArr = Array.from(valorantMatches).map((item: CheerioItem) => {
-      const matchDate = item.parent.prev.prev.children[0].data.trim();
-      const matchTime = item.children[0].next.children[0].data.trim();
+      const matchDate = new Date(item.parent.prev.prev.children[0].data.trim()).toISOString().split('T')[0];
+      const matchTime = getParsedTime(item.children[0].next.children[0].data.trim());
       const event = item.children[13].children[2].data.trim();
       const teamAName = item.children[3].children[1].children[1].children[1].children[2].data.trim();
       const teamAImage = '';
@@ -283,6 +307,7 @@ class EsportsNotifier {
       return gameInfo;
     });
 
+    this.logger(`found ${matchesInfoArr.length} valorant matches`);
     return matchesInfoArr;
   }
 
@@ -291,50 +316,55 @@ class EsportsNotifier {
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
 
-    if (this.config.games.csgo) {
+    if (this.config.esports.games.csgo) {
       allMatches.push(...this.getCsgoMatches());
     }
 
-    if (this.config.games.valorant) {
+    if (this.config.esports.games.valorant) {
       allMatches.push(...this.getValorantMatches());
     }
 
-    if (this.config.games.rainbowSixSiege) {
+    if (this.config.esports.games.rainbowSixSiege) {
       allMatches.push(...this.getR6Matches());
     }
 
-    if (this.config.games.dota) {
+    if (this.config.esports.games.dota) {
       // allMatches.push(...[]);
     }
 
-    if (this.config.games.lol) {
+    if (this.config.esports.games.lol) {
       // allMatches.push(...[]);
     }
 
-    if (this.config.games.rocketLeague) {
+    if (this.config.esports.games.rocketLeague) {
       // allMatches.push(...[]);
     }
 
-    if (this.config.games.overwatch) {
+    if (this.config.esports.games.overwatch) {
       // allMatches.push(...[]);
     }
 
-    if (this.config.games.callOfDuty) {
+    if (this.config.esports.games.callOfDuty) {
       // allMatches.push(...[]);
     }
 
-    if (this.config.games.freeFire) {
+    if (this.config.esports.games.freeFire) {
       // allMatches.push(...[]);
     }
 
     this.todayMatches = allMatches;
+    this.logger('');
+    this.logger(`there were found ${this.todayMatches.length} matches across all selected games`);
+
     return this.todayMatches;
   }
 
-  private getFavoriteTeamsTodayMatches(allMatches: Game[]) {
-    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => this.config.favoriteTeams.includes(matchTeam.toLowerCase())));
+  private getFavoriteTeamsMatches(allMatches: Game[]) {
+    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => this.config.esports.favoriteTeams.includes(matchTeam.toLowerCase())));
 
     this.todayFavoriteTeamsMatches = favoriteTeamsMatches;
+    this.logger(`there were found ${this.todayFavoriteTeamsMatches.length} of your favorite teams in the next coulpe of days`);
+
     return this.todayFavoriteTeamsMatches;
   }
 
@@ -401,16 +431,45 @@ class EsportsNotifier {
 
     MailApp.sendEmail({
       to: this.USER_EMAIL,
-      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} games for today`,
+      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} games for ${this.TODAY_DATE}`,
       htmlBody: this.generateEmailContent(favoriteTeamsMatches)
     });
   }
 
   /* MAIN FUNCTION ========================================================== */
 
+  install() {
+    this.logger(`install ${this.APPNAME}`);
+    const timeArr = this.config.datetime.timeToSendEmail.split(':');
+    if (timeArr.length !== 2) {
+      throw new Error(this.ERRORS.timeToSendEmailIncorrect);
+    }
+
+    const tickSyncTrigger = ScriptApp.getProjectTriggers().find((item) => item.getHandlerFunction() === this.config.settings.loopFunction);
+    if (tickSyncTrigger) {
+      this.logger(`removed old trigger of function ${this.config.settings.loopFunction}`);
+      ScriptApp.deleteTrigger(tickSyncTrigger);
+    }
+
+    this.logger(`the loop function ${this.config.settings.loopFunction} will be triggered everyday at ${this.config.datetime.timeToSendEmail}`);
+    ScriptApp.newTrigger(this.config.settings.loopFunction).timeBased().everyDays(1).atHour(Number(timeArr[0])).nearMinute(Number(timeArr[1])).create();
+  }
+
+  uninstall() {
+    this.logger(`uninstall ${this.APPNAME}`);
+    const tickSyncTrigger = ScriptApp.getProjectTriggers().find((item) => item.getHandlerFunction() === this.config.settings.loopFunction);
+
+    if (tickSyncTrigger) {
+      ScriptApp.deleteTrigger(tickSyncTrigger);
+    }
+  }
+
   checkTodayGames() {
     const allMatches = this.getAllTodayMatches();
-    const favoriteTeamsMatches = this.getFavoriteTeamsTodayMatches(allMatches);
+    const favoriteTeamsMatches = this.getFavoriteTeamsMatches(allMatches);
+    const onlyTodayMatches = favoriteTeamsMatches.filter((game) => game.date === this.TODAY_DATE);
+    this.logger(`there were found ${onlyTodayMatches.length} of your favorite teams today`);
+
     this.sendEmail(favoriteTeamsMatches);
   }
 }
