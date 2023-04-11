@@ -381,7 +381,16 @@ class EsportsNotifier {
   }
 
   private getFavoriteTeamsMatches(allMatches: Game[]) {
-    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => this.config.esports.favoriteTeams.includes(matchTeam.toLowerCase())));
+    const lowercaseFavoriteTeams = this.config.esports.favoriteTeams.map((team) => team.toLowerCase());
+
+    const favoriteTeamsMatches = allMatches.filter((item) => {
+      const lowerCaseMatchTeams = item.teams.map((team) => team.toLowerCase());
+      if (this.config.settings.strictTeamComparasion) {
+        return lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.includes(matchTeam.toLowerCase()));
+      } else {
+        return lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.filter((favTeam) => matchTeam.search(favTeam) > -1).length > 0);
+      }
+    });
 
     this.todayFavoriteTeamsMatches = favoriteTeamsMatches;
     this.logger(`there were found ${this.todayFavoriteTeamsMatches.length} of your favorite teams in the next coulpe of days`);
@@ -396,7 +405,7 @@ class EsportsNotifier {
 
     const tableStyle = `border: 1px solid #333; width: 90%`;
     const rowStyle = `text-align: center;`;
-    const columnStyle = `border: 1px solid #333; white-space: nowrap; padding: 10px;`;
+    const columnStyle = `border: 1px solid #333; white-space: nowrap;`;
 
     // prettier-ignore
     const header = `<tr style="${rowStyle}">
@@ -412,32 +421,32 @@ class EsportsNotifier {
 
           const teamAImage = item.teamA.image || item.teamA.countryImage || '';
           const teamBImage = item.teamB.image || item.teamB.countryImage || '';
-          console.log(teamAImage);
 
           const itemRow = `<tr style="${rowStyle}">
                             <td style="${columnStyle}">
                               <div style="text-align: center;">${this.config.settings.notifyOnlyAboutTodayGames ? `<p style="white-space: nowrap;">${item.time}</p>` : `<p style="white-space: nowrap;">${item.date}</p><p style="white-space: nowrap;">${item.time}</p>`}</div>
                             </td>
-                            <td style="${columnStyle}">
+                            <td style="${columnStyle} padding: 10px 0;">
                               <a href="${item.link}">
-                                <div style="display: flex; align-items: center; justify-content: center; gap: 150px;">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 100px;">
                                   <div style="width: 100%;">
-                                    ${teamAImage === '' ? '' : `<img src="${teamAImage}" width="20px" height="20px">`}
-                                    <p>${item.teamA.name}</p>
+                                    ${teamAImage === '' ? '' : `<img src="${teamAImage}" width="30px" height="30px"><br>`}
+                                    <span>${item.teamA.name}</span>
                                   </div>
                                   <div style="width: 100%;">
-                                    ${teamBImage === '' ? '' : `<img src="${teamBImage}" width="20px" height="20px">`}
-                                    <p>${item.teamB.name}</p>
+                                    ${teamBImage === '' ? '' : `<img src="${teamBImage}" width="30px" height="30px"><br>`}
+                                    <span>${item.teamB.name}</span>
                                   </div>
-                                </div>
-                                <p style="word-wrap: break-word;">${item.event}</p>
+                                  </div>
                               </a>
+                              <br>
+                              <span style="word-wrap: break-word;">${item.event}</span>
                             </td>
-                            <td style="${columnStyle}">
+                            <td style="${columnStyle} padding: 10px 0;">
                               <div style="text-align: center;">
                                 <a href="${item.game.link}">
-                                  <img width="50px" height="50px" src="${item.game.image}"><br>
-                                  <p>${item.game.name}</p>
+                                  <img width="30px" height="30px" src="${item.game.image}"><br>
+                                  <span>${item.game.name}</span>
                                 </a>
                               </div>
                             </td>
