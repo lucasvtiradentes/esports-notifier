@@ -14,7 +14,7 @@
   "main": "./dist/EsportsNotifier.min.js",
   "scripts": {
     "start": "node ./dist/EsportsNotifier.min.js",
-    "dev": "tsx ./tests/dev.ts",
+    "dev": "tsx ./resources/dev.ts",
     "build": "rimraf ./dist && tsc && npm run scripts:postbuild",
     "test": "jest --passWithNoTests --verbose",
     "pub": "semantic-release",

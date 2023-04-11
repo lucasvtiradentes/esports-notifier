@@ -1,5 +1,5 @@
 import EsportsNotifier from './export-lib';
-import { config } from './lib-config';
+import { config } from './config';
 
 const esportsNotifier = new EsportsNotifier(config);
 console.log(esportsNotifier);

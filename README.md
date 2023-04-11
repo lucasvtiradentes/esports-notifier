@@ -107,13 +107,13 @@ To effectively use this project, do the following steps:
   <div>
     <br>
     <p>Go to the <a href="">google apps script</a> and create a new project by clicking in the button showed in the next image.<br>
-    It would be a good idea to rename the project to something like "twitch-notifier".</p>
+    It would be a good idea to rename the project to something like "esports-notifier".</p>
     <p align="center"><img width="500" src="./.github/images/tutorial/tut2.png" /></p>
   </div>
 </details>
 
 <details>
-  <summary>2 - setup the twitch-notifier on GAS</summary>
+  <summary>2 - setup the esports-notifier on GAS</summary>
   <div>
     <br>
     <p>Click on the initial file, which is the <b>rectangle-1</b> on the image.</p>

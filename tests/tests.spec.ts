@@ -1,5 +1,5 @@
-import EsportsNotifier from './export-lib';
-import { config } from './lib-config';
+import EsportsNotifier from '../resources/export-lib';
+import { config } from '../resources/config';
 
 it('should throw an error when initializing without configs', () => {
   expect(() => {
