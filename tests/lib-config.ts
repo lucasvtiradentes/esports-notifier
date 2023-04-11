@@ -4,14 +4,14 @@ export const config = {
   favoriteTeams: ['loud', 'mibr', 'imperial', 'syko'],
   strictComparasion: false,
   games: {
-    dota: true,
-    lol: true,
-    rocketLeague: true,
+    dota: false,
+    lol: false,
+    rocketLeague: false,
     csgo: true,
     valorant: true,
     rainbowSixSiege: true,
-    freeFire: true,
-    callOfDuty: true,
-    overwatch: true
+    freeFire: false,
+    callOfDuty: false,
+    overwatch: false
   }
 };

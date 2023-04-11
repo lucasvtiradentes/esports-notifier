@@ -50,23 +50,22 @@ class EsportsNotifier {
   VERSION = ''; // version
   APPNAME = 'esports-notifier';
   GITHUB_REPOSITORY = 'lucasvtiradentes/esports-notifier';
-  TODAY_DATE = new Date().toISOString().split('T')[0];
+  TODAY_DATE = '';
   ENVIRONMENT = this.detectEnvironment();
-  APPS_SCRIPTS_PROPERTIES = {
-    todayTicktickAddedTasks: 'todayTicktickAddedTasks',
-    todayTicktickUpdateTasks: 'todayTicktickUpdateTasks',
-    todayTicktickCompletedTasks: 'todayTicktickCompletedTasks',
-    todayGithubAddedCommits: 'todayGithubAddedCommits',
-    todayGithubDeletedCommits: 'todayGithubDeletedCommits',
-    lastReleasedVersionAlerted: 'lastReleasedVersionAlerted'
-  };
+  USER_EMAIL = this.ENVIRONMENT === 'production' ? this.getUserEmail() : '';
   ERRORS = {
     mustSpecifyConfig: 'You must specify the settings when starting the class'
   };
+  public todayMatches: Game[] = [];
+  private hasSyncedTodayMatches = false;
 
   constructor(public config: Config) {
     this.validateConfigs(config);
     this.config = config;
+    this.TODAY_DATE = this.getDateFixedByTimezone(this.config.diffHoursFromUtc).toISOString().split('T')[0];
+
+    this.logger(`${this.APPNAME} is running at version ${this.VERSION} in ${this.ENVIRONMENT} environment`);
+    this.logger(`check the docs for your version here: ${`https://github.com/${this.GITHUB_REPOSITORY}/tree/v${this.VERSION}#readme`}`);
   }
 
   private validateConfigs(config: Config) {
@@ -89,46 +88,54 @@ class EsportsNotifier {
     });
   }
 
-  /* LOGGER FUNCTIONS ======================================================= */
-
-  private logger(message: string) {
-    console.log(message);
-  }
-
-  /* DETECT ENVIRONMENT FUNCTION============================================= */
   private detectEnvironment(): Environment {
-    if (typeof Calendar === 'undefined') {
+    if (typeof UrlFetchApp === 'undefined') {
       return 'development';
     } else {
       return 'production';
     }
   }
 
-  /* LOGGER FUNCTIONS ======================================================= */
-
-  check() {
-    const csgoMatches = this.getCsgoMatches();
-    const r6Matches = this.getR6Matches();
-    const valorantMatches = this.getValorantMatches();
-
-    const allMatches = [...csgoMatches, ...r6Matches, ...valorantMatches];
-    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => this.config.favoriteTeams.includes(matchTeam.toLowerCase())));
-
-    console.log(favoriteTeamsMatches);
-    console.log(allMatches.length);
-    console.log(favoriteTeamsMatches.length);
+  private logger(message: string) {
+    console.log(message);
   }
 
-  parseHtmlData(content: string) {
+  /* HELPER FUNCTIONS ======================================================= */
+
+  private getDateFixedByTimezone(timeZoneIndex: number) {
+    const date = new Date();
+    date.setHours(date.getHours() + timeZoneIndex);
+    return date;
+  }
+
+  private parseHtmlData(content: string) {
     const cheerioLib = globalThis.Cheerio as any;
     return cheerioLib.load(content);
   }
 
-  getCsgoMatches() {
+  private getUserEmail() {
+    if (this.ENVIRONMENT === 'production') {
+      return Session.getActiveUser().getEmail();
+    }
+
+    return '';
+  }
+
+  private getPageContent(url: string) {
+    if (this.ENVIRONMENT === 'production') {
+      return UrlFetchApp.fetch(url, { muteHttpExceptions: true }).getContentText();
+    }
+
+    return '';
+  }
+
+  /* GET MATCHES FUNCTIONS ================================================== */
+
+  private getCsgoMatches() {
     const LIQUEDPEDIA_LINK = 'https://liquipedia.net';
     const CSGO_API = `${LIQUEDPEDIA_LINK}/counterstrike/Main_Page`;
 
-    const content = UrlFetchApp.fetch(CSGO_API, { muteHttpExceptions: true }).getContentText();
+    const content = this.getPageContent(CSGO_API);
     const $ = this.parseHtmlData(content);
     const csgoMatches = $('table.infobox_matches_content');
 
@@ -182,10 +189,10 @@ class EsportsNotifier {
     return matchesInfoArr;
   }
 
-  getR6Matches() {
+  private getR6Matches() {
     const RAINBOW_SIX_SOURCE = 'https://siege.gg';
     const RAINBOW_SIX_SIEGE_MATCHES_PAGE = `${RAINBOW_SIX_SOURCE}/matches`;
-    const content = UrlFetchApp.fetch(RAINBOW_SIX_SIEGE_MATCHES_PAGE, { muteHttpExceptions: true }).getContentText();
+    const content = this.getPageContent(RAINBOW_SIX_SIEGE_MATCHES_PAGE);
     const $ = this.parseHtmlData(content);
 
     const r6Matches = $('a.match--awaiting-results'); // match--has-results
@@ -227,9 +234,9 @@ class EsportsNotifier {
     return matchesInfoArr;
   }
 
-  getValorantMatches() {
+  private getValorantMatches() {
     const VALORANT_API = 'https://www.vlr.gg/matches';
-    const content = UrlFetchApp.fetch(VALORANT_API).getContentText();
+    const content = this.getPageContent(VALORANT_API);
     const $ = this.parseHtmlData(content);
 
     const valorantMatches = $('a.match-item');
@@ -268,5 +275,59 @@ class EsportsNotifier {
     });
 
     return matchesInfoArr;
+  }
+
+  /* MAIN FUNCTIONS ========================================================= */
+
+  getAllTodayMatches() {
+    const allMatches: Game[] = [];
+
+    if (this.config.games.csgo) {
+      allMatches.push(...this.getCsgoMatches());
+    }
+
+    if (this.config.games.valorant) {
+      allMatches.push(...this.getValorantMatches());
+    }
+
+    if (this.config.games.rainbowSixSiege) {
+      allMatches.push(...this.getR6Matches());
+    }
+
+    if (this.config.games.dota) {
+      // allMatches.push(...[]);
+    }
+
+    if (this.config.games.lol) {
+      // allMatches.push(...[]);
+    }
+
+    if (this.config.games.rocketLeague) {
+      // allMatches.push(...[]);
+    }
+
+    if (this.config.games.overwatch) {
+      // allMatches.push(...[]);
+    }
+
+    if (this.config.games.callOfDuty) {
+      // allMatches.push(...[]);
+    }
+
+    if (this.config.games.freeFire) {
+      // allMatches.push(...[]);
+    }
+
+    this.todayMatches = allMatches;
+    this.hasSyncedTodayMatches = true;
+
+    return this.todayMatches;
+  }
+
+  getFavoriteTeamsTodayMatches() {
+    const allMatches = this.hasSyncedTodayMatches ? this.todayMatches : this.getAllTodayMatches();
+    const favoriteTeamsMatches = allMatches.filter((item) => item.teams.some((matchTeam) => this.config.favoriteTeams.includes(matchTeam.toLowerCase())));
+
+    return favoriteTeamsMatches;
   }
 }
