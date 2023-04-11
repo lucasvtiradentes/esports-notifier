@@ -16,7 +16,7 @@ type Config = {
     };
   };
   datetime: {
-    diffHoursFromUtc: number;
+    diffHoursFromGmtTimezone: number;
     timeToSendEmail: string;
   };
   settings: {
@@ -58,8 +58,7 @@ type CheerioItem = any;
 
 /* -------------------------------------------------------------------------- */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class EsportsNotifier {
+export default class EsportsNotifier {
   VERSION = ''; // version
   APPNAME = 'esports notifier';
   GITHUB_REPOSITORY = 'lucasvtiradentes/esports-notifier';
@@ -77,7 +76,7 @@ class EsportsNotifier {
   constructor(public config: Config) {
     this.validateConfigs(config);
     this.config = config;
-    this.TODAY_DATE = this.getDateFixedByTimezone(new Date(), this.config.datetime.diffHoursFromUtc).toISOString().split('T')[0];
+    this.TODAY_DATE = this.getDateFixedByTimezone(new Date(), this.config.datetime.diffHoursFromGmtTimezone).toISOString().split('T')[0];
 
     this.logger(`${this.APPNAME} is running at version ${this.VERSION} in ${this.ENVIRONMENT} environment`);
     this.logger(`check the docs for your version here: ${`https://github.com/${this.GITHUB_REPOSITORY}/tree/v${this.VERSION}#readme`}`);
@@ -92,7 +91,7 @@ class EsportsNotifier {
       { objToCheck: config, requiredKeys: ['esports', 'datetime', 'settings'], name: 'configs' },
       { objToCheck: config?.esports, requiredKeys: ['favoriteTeams', 'games'], name: 'configs.esports' },
       { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'dota', 'lol', 'rocketLeague', 'overwatch', 'callOfDuty', 'freeFire'], name: 'configs.esports.games' },
-      { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromUtc', 'timeToSendEmail'], name: 'configs.datetime' },
+      { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromGmtTimezone', 'timeToSendEmail'], name: 'configs.datetime' },
       { objToCheck: config?.settings, requiredKeys: ['notifyOnlyAboutTodayGames', 'strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
     ];
 
@@ -180,7 +179,7 @@ class EsportsNotifier {
     const matchesInfoArr = Array.from(csgoMatches)
       .filter((item: CheerioItem) => item.parent.attribs['data-toggle-area-content'] === '1')
       .map((item: CheerioItem) => {
-        const dateTime = this.getDateFixedByTimezone(new Date(item.children[1].children[2].children[1].children[0].children[0].children[0].data.replace('- ', '')), this.config.datetime.diffHoursFromUtc).toISOString();
+        const dateTime = this.getDateFixedByTimezone(new Date(item.children[1].children[2].children[1].children[0].children[0].children[0].data.replace('- ', '')), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
         const teamAElement = item.children[1].children[0].children[1].children[0];
         const teamBElement = item.children[1].children[0].children[5].children[0];
         const matchDate = dateTime.split('T')[0];
@@ -232,7 +231,7 @@ class EsportsNotifier {
 
     const r6Matches = $('a.match--awaiting-results'); // match--has-results
     const matchesInfoArr = Array.from(r6Matches).map((item: CheerioItem) => {
-      const dateTimeFixedStr = this.getDateFixedByTimezone(new Date(item.children[0].attribs['data-time']), this.config.datetime.diffHoursFromUtc).toISOString();
+      const dateTimeFixedStr = this.getDateFixedByTimezone(new Date(item.children[0].attribs['data-time']), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
 
       const matchDate = dateTimeFixedStr.split('T')[0];
       const matchTime = dateTimeFixedStr.split('T')[1].slice(0, 5);

@@ -1,9 +1,12 @@
-import EsportsNotifier from '../resources/export-lib';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import EsportsNotifier from '../src/EsportsNotifier';
 import { config } from '../resources/config';
 
 it('should throw an error when initializing without configs', () => {
   expect(() => {
-    new EsportsNotifier();
+    const config = undefined as any;
+    new EsportsNotifier(config);
   }).toThrow('You must specify the settings when starting the class');
 });
 

@@ -145,14 +145,15 @@ To effectively use this project, do the following steps:
     </div>
     <p>Go back to the project files, and replace the content present in the <code>appsscript.json</code> with the following code:</p>    <p align="center"><img width="500" src="./.github/images/tutorial/tut5.png" /></p>
     <pre>
+<!-- <DYNFIELD:GAS_APPSSCRIPT> -->
 {
   "timeZone": "Etc/GMT",
   "dependencies": {
-    "enabledAdvancedServices": [
+    "libraries": [
       {
-        "userSymbol": "Calendar",
-        "serviceId": "calendar",
-        "version": "v3"
+        "userSymbol": "Cheerio",
+        "version": "14",
+        "libraryId": "1ReeQ6WO8kKNxoaA_O0XEQ589cIrRvEBA9qcWpNqdOP17i47u6N9M5Xh0"
       }
     ]
   },
@@ -164,7 +165,9 @@ To effectively use this project, do the following steps:
   ],
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8"
-}</pre>
+}
+<!-- </DYNFIELD:GAS_APPSSCRIPT> -->
+</pre>
   </div>
 </details>
 
