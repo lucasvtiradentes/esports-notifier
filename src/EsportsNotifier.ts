@@ -506,7 +506,12 @@ export default class EsportsNotifier {
     }
 
     this.logger(`the loop function ${this.config.settings.loopFunction} will be triggered everyday at ${this.config.datetime.timeToSendEmail}`);
-    ScriptApp.newTrigger(this.config.settings.loopFunction).timeBased().everyDays(1).atHour(Number(timeArr[0])).nearMinute(Number(timeArr[1])).create();
+    ScriptApp.newTrigger(this.config.settings.loopFunction)
+      .timeBased()
+      .everyDays(1)
+      .atHour(Number(timeArr[0]) + this.config.datetime.diffHoursFromGmtTimezone)
+      .nearMinute(Number(timeArr[1]))
+      .create();
   }
 
   uninstall() {

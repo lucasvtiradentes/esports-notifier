@@ -135,8 +135,8 @@ To effectively use this project, do the following steps:
 <!-- <DYNFIELD:GAS_SETUP> -->
 const CONFIGS = {
   esports: {
-    favoriteTeams: ['loud', 'mibr', 'imperial', 'syko'], // specify your favorite teams
-    games: {                                             // select the games you're interested
+    favoriteTeams: ['loud', 'mibr', 'imperial'], // specify your favorite teams
+    games: {                                     // select the games you're interested
       csgo: true,
       valorant: true,
       rainbowSixSiege: true,
@@ -149,14 +149,14 @@ const CONFIGS = {
     }
   },
   datetime: {
-    timeToSendEmail: '07:00',                            // time to send the daily email if there is at least on game of your favorite teams
-    diffHoursFromGmtTimezone: -3                         // specify the hour difference between your timezone and GMT timezone (UTC 0)
+    timeToSendEmail: '07:00',                    // time to send the daily email if there is at least on game of your favorite teams
+    diffHoursFromGmtTimezone: -3                 // specify the hour difference between your timezone and GMT timezone (UTC 0)
   },
   settings: {
-    notifyOnlyAboutTodayGames: true,                     // if 'false' it will alse send email in case of matchs of favorite teams in the next days
-    strictTeamComparasion: false,                        // if 'true' the name of the teams must be exact in all the matches source sites
-    maintanceMode: false,                                // development option dont need to change
-    loopFunction: 'checkTodayGames'                      // development option dont need to change
+    notifyOnlyAboutTodayGames: true,             // if 'false' it will alse send email in case of matchs of favorite teams in the next days
+    strictTeamComparasion: false,                // if 'true' the name of the teams must be exact in all the matches source sites
+    maintanceMode: false,                        // development option dont need to change
+    loopFunction: 'checkTodayGames'              // development option dont need to change
   }
 };
 
@@ -366,6 +366,7 @@ This project uses the following thechnologies:
 ## Related
 
 - [x] [cheerio for GAS](https://github.com/tani/cheeriogs): project used in order to parse the html pages content into javascript objects.
+- [x] [GAS docs](https://developers.google.com/apps-script/reference/script/clock-trigger-builder?hl=pt-br): documentation related to triggering functions in Google Apps script.
 
 ## License
 
