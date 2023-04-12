@@ -87,11 +87,11 @@ function createSetupGasFile(outFile: string, version: string) {
   configContent = configContent.replace('// prettier-ignore\n', '');
 
   const gasSetupContent = `const CONFIGS = ${configContent}
-function getEsportsNotifier() {
+function getEsportsNotifier(){
   const version = "${version}"
-  const content = getGithubFileContent('lucasvtiradentes/esports-notifier', 'master');
-  eval(\`this.EsportsNotifier = \` + content);
-  const esportsNotifier = new EsportsNotifier(CONFIGS);
+  const content = UrlFetchApp.fetch(\`https://cdn.jsdelivr.net/npm/esports-notifier@\${version}\`).getContentText();
+  eval(content)
+  const esportsNotifier = new EsportsNotifier(CONFIGS)
   return esportsNotifier;
 }
 
@@ -108,16 +108,6 @@ function setup() {
 function uninstall() {
   const esportsNotifier = getEsportsNotifier();
   esportsNotifier.uninstall();
-}
-
-function getGithubFileContent(repository, branch) {
-  const filePath = 'dist/EsportsNotifier.min.js';
-  const final_link = \`https://api.github.com/repos/\${repository}/contents/\${filePath}\${branch ? \`?ref=\${branch}\` : ''}\`;
-  const response = UrlFetchApp.fetch(final_link, { method: 'get', contentType: 'application/json' });
-  const base64Content = JSON.parse(response.toString()).content;
-  const decodedArr = Utilities.base64Decode(base64Content);
-  const decodedAsString = Utilities.newBlob(decodedArr).getDataAsString();
-  return decodedAsString;
 }`;
 
   writeFileSync(outFile, gasSetupContent);

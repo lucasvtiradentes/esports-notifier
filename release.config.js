@@ -1,6 +1,6 @@
 module.exports = {
   branches: ['master'],
-  repository: 'https://github.com/lucasvtiradentes/gcal-sync',
+  repository: 'https://github.com/lucasvtiradentes/esports-notifier',
   plugins: [
     [
       '@semantic-release/commit-analyzer',
@@ -71,7 +71,7 @@ module.exports = {
     [
       '@semantic-release/git',
       {
-        assets: ['docs/CHANGELOG.MD', 'package.json', 'README.md', 'dist/TickSync.min.js'],
+        assets: ['docs/CHANGELOG.MD', 'package.json', 'README.md', 'dist/EsportsNotifier.min.js', 'dist/GAS-appsscript.json', 'dist/GAS-setup.js'],
         message: ':bookmark: tags: new version release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
     ]

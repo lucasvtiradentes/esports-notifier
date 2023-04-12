@@ -6,7 +6,9 @@
 .husky/
 .vscode/
 docs/
+ignore/
 node_modules/
+resources/
 scripts/
 src/*.ts
 tests/
