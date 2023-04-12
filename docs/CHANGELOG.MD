@@ -1,5 +1,12 @@
 # CHANGELOG HISTORY
 
+## [1.0.1](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.0.0...v1.0.1) (2023-04-12)
+
+
+### 🐛 bugfix:
+
+* trigger function at the intended time ([#15](https://github.com/lucasvtiradentes/esports-notifier/issues/15)) ([51e5207](https://github.com/lucasvtiradentes/esports-notifier/commit/51e5207ded1fa114256f076f0265a7800705962d))
+
 ## 1.0.0 (2023-04-12)
 
 

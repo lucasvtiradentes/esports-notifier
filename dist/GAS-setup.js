@@ -26,7 +26,7 @@ const CONFIGS = {
 };
 
 function getEsportsNotifier(){
-  const version = "1.0.0"
+  const version = "1.0.1"
   const content = UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
   eval(content)
   const esportsNotifier = new EsportsNotifier(CONFIGS)
