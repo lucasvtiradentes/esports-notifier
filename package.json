@@ -2,6 +2,16 @@
   "name": "esports-notifier",
   "description": "🔔 receive a daily email informing whenever at least one of your favorite esports teams has a match in the current date.",
   "version": "1.0.1",
+  "keywords": [
+    "esports",
+    "notify",
+    "game",
+    "csgo",
+    "valorant",
+    "rainbow-six-siege",
+    "google-apps-script",
+    "typescript"
+  ],
   "license": "MIT",
   "author": {
     "name": "Lucas Vieira",

@@ -5,6 +5,7 @@
 </h3>
 
 <div align="center">
+  <a href="https://www.npmjs.com/package/esports-notifier"><img src="https://img.shields.io/npm/v/esports-notifier.svg?style=flat" alt="npm version"></a>
   <a href="https://nodejs.org/en/"><img src="https://img.shields.io/badge/made%20with-node-1f425f?logo=node.js&.svg" /></a>
   <a href="https://www.google.com/script/start/"><img src="https://img.shields.io/badge/apps%20script-4285F4?logo=google&logoColor=white" /></a>
   <a href="https://github.com/lucasvtiradentes/esports-notifier#contributing"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions" /></a>
@@ -27,6 +28,7 @@
         <ul>
           <li><a href="#how-it-works">How it works?</a></li>
           <li><a href="#installation">Installation</a></li>
+          <li><a href="#updating">Updating</a></li>
           <li><a href="#uninstall">Uninstall</a></li>
         </ul>
       </li>
@@ -53,7 +55,7 @@
 
 ## :trumpet: Overview
 
-Receive a **daily email** informing **whenever at least one of your favorite esports teams has a match** on the current date in a bunch of esports games, including _csgo_, _valorant_ and _league of legends_. See the complete game list <a href="#GAMES">here</a>.
+Receive a **daily email** informing **whenever at least one of your favorite esports teams has a match** on the current date in a bunch of esports games, including _csgo_, _valorant_ and _rainbow six siege_. See the complete game list <a href="#GAMES">here</a>.
 
 <div align="center">
   <table align="center">
@@ -86,12 +88,14 @@ It is worth mentioning that the tool currently informs about the following games
 - [x] [counter-strike global offense](https://liquipedia.net/counterstrike/Liquipedia:Matches)
 - [x] [valorant](https://www.vlr.gg/matches)
 - [x] [rainbow six siege](https://siege.gg/matches)
-<!-- - [ ] overwatch 2
+<!--
+- [ ] overwatch 2
 - [ ] dota 2
 - [ ] league of legends
 - [ ] free fire
 - [ ] rocket league
-- [ ] call of duty -->
+- [ ] call of duty
+      -->
 
 ## :warning: Requirements<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
@@ -117,7 +121,7 @@ To effectively use this project, do the following steps:
   <summary>1 - create a Google Apps Scripts (GAS) project</summary>
   <div>
     <br>
-    <p>Go to the <a href="">google apps script</a> and create a new project by clicking in the button showed in the next image.<br>
+    <p>Go to the <a href="https://www.google.com/script/start/">google apps script</a> and create a new project by clicking in the button showed in the next image.<br>
     It would be a good idea to rename the project to something like "esports-notifier".</p>
     <p align="center"><img width="500" src="./.github/images/tutorial/tut2.png" /></p>
   </div>
@@ -129,7 +133,7 @@ To effectively use this project, do the following steps:
     <br>
     <p>Click on the initial file, which is the <b>rectangle-1</b> on the image.</p>
     <p align="center"><img width="500" src="./.github/images/tutorial/tut3.png" /></p>
-    <p>Replace the initial content present in the <b>rectangle-2</b> with the content present in <a href="./src/notifier.js">notifier.js</a>.</p>
+    <p>Replace the initial content present in the <b>rectangle-2</b> with the content present in code bellow.</p>
     <blockquote>
       <p><span>⚠️ Warning</span><br>
        Remember to update the <code>CONFIGS</code> object according to your data and needs.</p>
@@ -143,18 +147,12 @@ const CONFIGS = {
     games: {                                     // select the games you're interested
       csgo: true,
       valorant: true,
-      rainbowSixSiege: true,
-      dota: false,
-      lol: false,
-      rocketLeague: false,
-      overwatch: false,
-      callOfDuty: false,
-      freeFire: false
+      rainbowSixSiege: true
     }
   },
   datetime: {
     timeToSendEmail: '07:00',                    // time to send the daily email if there is at least on game of your favorite teams
-    diffHoursFromGmtTimezone: -3                 // specify the hour difference between your timezone and GMT timezone (UTC 0)
+    diffHoursFromGmtTimezone: -3                 // specify the hour difference between your timezone and GMT/UTC timezone | https://www.utctime.net/ | -3 means that in my timezone (15h) is 3 hours behind from utc timezone (18h).
   },
   settings: {
     notifyOnlyAboutTodayGames: true,             // if 'false' it will alse send email in case of matchs of favorite teams in the next days
@@ -255,6 +253,22 @@ function uninstall() {
   </div>
 </details>
 
+### Updating
+
+To update your esports-notifier instance and use the latest features, you just need to change the `version` number in the `getEsportsNotifier` function, as it is shown bellow:
+
+<pre>
+function getEsportsNotifier(){
+  const version = "1.0.0" // update here to use the latest features
+  const content = UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
+  eval(content)
+  const esportsNotifier = new EsportsNotifier(CONFIGS)
+  return esportsNotifier;
+}
+</pre>
+
+So if your instance is running at version "1.0.0" and the latest is "3.6.1", just replace those numbers in the `version` variable.
+
 ### Uninstall
 
 If you want to receive the daily emails, just go to the GAS respective project in the header dropdown menu select the `uninstall` function and then click on the `Run` button. By doing that, the GAS trigger responsable for running everyday the function will be deleted.
@@ -282,7 +296,7 @@ $ cd esports-notifier
 $ npm install
 ```
 
-If you want to contribute to the project, fork the project, make the necessary changes, and to test your work you can load your version in apps scripts with almost no effort: replace the content of the <code>getEsportsNotifier</code> function with the following code:
+If you want to [contribute](./docs/CONTRIBUTING.md) to the project, fork the project, make the necessary changes, and to test your work you can load your version in apps scripts with almost no effort do this: replace the content of the <code>getEsportsNotifier</code> function with the following code:
 
 ```js
 function getEsportsNotifier() {
@@ -309,7 +323,7 @@ function getEsportsDevelopment(repository, branch) {
 }
 ```
 
-This will allow you to **esports-notifier** source place (github repository or npm package) and specified version.
+This will allow you to select the **esports-notifier** source place (github repository or npm package) and specify the intended version.
 
   </div>
 </details>
@@ -368,6 +382,7 @@ This project uses the following thechnologies:
 
 ## Related
 
+- [x] [twitch-notifier](https://github.com/lucasvtiradentes/twitch-notifier): get email notifications when _only your favorite_ twitch streamers go live.
 - [x] [cheerio for GAS](https://github.com/tani/cheeriogs): project used in order to parse the html pages content into javascript objects.
 - [x] [GAS docs](https://developers.google.com/apps-script/reference/script/clock-trigger-builder?hl=pt-br): documentation related to triggering functions in Google Apps script.
 

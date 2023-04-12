@@ -7,12 +7,6 @@ type Config = {
       csgo: boolean;
       valorant: boolean;
       rainbowSixSiege: boolean;
-      dota: boolean;
-      lol: boolean;
-      rocketLeague: boolean;
-      overwatch: boolean;
-      callOfDuty: boolean;
-      freeFire: boolean;
     };
   };
   datetime: {
@@ -90,7 +84,7 @@ export default class EsportsNotifier {
     const validationArr = [
       { objToCheck: config, requiredKeys: ['esports', 'datetime', 'settings'], name: 'configs' },
       { objToCheck: config?.esports, requiredKeys: ['favoriteTeams', 'games'], name: 'configs.esports' },
-      { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'dota', 'lol', 'rocketLeague', 'overwatch', 'callOfDuty', 'freeFire'], name: 'configs.esports.games' },
+      { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege'], name: 'configs.esports.games' },
       { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromGmtTimezone', 'timeToSendEmail'], name: 'configs.datetime' },
       { objToCheck: config?.settings, requiredKeys: ['notifyOnlyAboutTodayGames', 'strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
     ];
@@ -347,30 +341,6 @@ export default class EsportsNotifier {
 
     if (this.config.esports.games.rainbowSixSiege) {
       allMatches.push(...this.getR6Matches());
-    }
-
-    if (this.config.esports.games.dota) {
-      // allMatches.push(...[]);
-    }
-
-    if (this.config.esports.games.lol) {
-      // allMatches.push(...[]);
-    }
-
-    if (this.config.esports.games.rocketLeague) {
-      // allMatches.push(...[]);
-    }
-
-    if (this.config.esports.games.overwatch) {
-      // allMatches.push(...[]);
-    }
-
-    if (this.config.esports.games.callOfDuty) {
-      // allMatches.push(...[]);
-    }
-
-    if (this.config.esports.games.freeFire) {
-      // allMatches.push(...[]);
     }
 
     this.todayMatches = allMatches.sort((a, b) => Number(new Date(`${a.date}T${a.time}`)) - Number(new Date(`${b.date}T${b.time}`)));
