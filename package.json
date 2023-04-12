@@ -1,7 +1,7 @@
 {
   "name": "esports-notifier",
   "description": "🔔 get email notifications informing when one of your favorite team has a game ",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "author": {
     "name": "Lucas Vieira",

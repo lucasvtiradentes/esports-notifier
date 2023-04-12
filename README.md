@@ -161,7 +161,7 @@ const CONFIGS = {
 };
 
 function getEsportsNotifier(){
-  const version = "0.0.1"
+  const version = "1.0.0"
   const content = UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
   eval(content)
   const esportsNotifier = new EsportsNotifier(CONFIGS)
@@ -273,7 +273,7 @@ If you want to contribute to the project, fork the project, make the necessary c
 
 ```js
 function getEsportsNotifier() {
-  // const version = "0.0.1" // version
+  // const version = "1.0.0" // version
   // const content = getEsportsProduction(version)
   const content = getEsportsDevelopment('yourgithub/project-fork', 'develop');
   eval(content);
