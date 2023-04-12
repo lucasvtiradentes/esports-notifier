@@ -1,26 +1,41 @@
-import minify from 'minify';
-import { readFileSync, writeFileSync, unlinkSync, renameSync } from 'node:fs';
 import { DynMarkdown } from 'dyn-markdown';
+import minify from 'minify';
+import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 
 (async () => {
-  createSetupGasFile();
-  createAppscriptFile();
+  const FILES = {
+    package: './package.json',
+    readme: './README.md',
+    gasAppsScript: './dist/GAS-appsscript.json',
+    gasSetup: './dist/GAS-setup.js',
+    esportsNotifierUdm: `./dist/UMD-EsportsNotifier.js`,
+    esportsNotifier: `./dist/EsportsNotifier.js`,
+    esportsNotifierMin: `./dist/EsportsNotifier.min.js`
+  };
 
-  const readmeFile = new DynMarkdown('./README.md');
-  readmeFile.updateField('GAS_APPSSCRIPT', readFileSync(`./dist/GAS-appsscript.json`, { encoding: 'utf-8' }));
-  // readmeFile.updateField('GAS_APPSSCRIPT', readFileSync(`./dist/GAS-setup.js`, { encoding: 'utf-8' }));
+  const README_FILES = {
+    gasAppsScriptContent: 'GAS_APPSSCRIPT',
+    gasSetupContent: 'GAS_SETUP'
+  };
+
+  const VERSION = JSON.parse(readFileSync(FILES.package, { encoding: 'utf8' })).version;
+
+  createSetupGasFile(FILES.gasSetup, VERSION);
+  createAppscriptFile(FILES.gasAppsScript);
+
+  const readmeFile = new DynMarkdown(FILES.readme);
+  readmeFile.updateField(README_FILES.gasSetupContent, readFileSync(FILES.gasSetup, { encoding: 'utf-8' }));
+  readmeFile.updateField(README_FILES.gasAppsScriptContent, readFileSync(FILES.gasAppsScript, { encoding: 'utf-8' }));
   readmeFile.saveFile();
 
-  const DIST_FILE = `./dist/UMD-EsportsNotifier.js`;
-  const packageJson = JSON.parse(readFileSync('./package.json', { encoding: 'utf8' }));
+  const VERSION_UPDATE = `// version`;
+  replaceFileContent(FILES.esportsNotifierUdm, VERSION_UPDATE, `this.VERSION = '${VERSION}'; ${VERSION_UPDATE}`);
+  replaceFileContent(FILES.readme, VERSION_UPDATE, `// const version = "${VERSION}" ${VERSION_UPDATE}`);
 
-  replaceFileContent(DIST_FILE, `// version`, `this.VERSION = '${packageJson.version}'; // version`);
-  replaceFileContent(`./README.md`, `// version`, `const version = "${packageJson.version}" // version`);
+  await minifyFile(FILES.esportsNotifierUdm, FILES.esportsNotifierMin);
 
-  await minifyFile(DIST_FILE);
-  unlinkSync(`./dist/EsportsNotifier.js`);
-  unlinkSync(`./dist/UMD-EsportsNotifier.js`);
-  renameSync(`./dist/UMD-EsportsNotifier.min.js`, `./dist/EsportsNotifier.min.js`);
+  unlinkSync(FILES.esportsNotifier);
+  unlinkSync(FILES.esportsNotifierUdm);
 })();
 
 /* ========================================================================== */
@@ -36,12 +51,12 @@ function replaceFileContent(file: string, strToFind: string, strToReplace: strin
   writeFileSync(file, newContent);
 }
 
-async function minifyFile(filePath: string) {
+async function minifyFile(filePath: string, outFile: string) {
   const minifiedContent = await minify(filePath);
-  writeFileSync(filePath.replace(`js`, `min.js`), minifiedContent);
+  writeFileSync(outFile, minifiedContent);
 }
 
-function createAppscriptFile() {
+function createAppscriptFile(outFile: string) {
   const appsScript = `{
   "timeZone": "Etc/GMT",
   "dependencies": {
@@ -63,16 +78,17 @@ function createAppscriptFile() {
   "runtimeVersion": "V8"
 }`;
 
-  writeFileSync(`./dist/GAS-appsscript.json`, appsScript);
+  writeFileSync(outFile, appsScript);
 }
 
-function createSetupGasFile() {
+function createSetupGasFile(outFile: string, version: string) {
   let configContent = readFileSync('./resources/config.ts', { encoding: 'utf-8' });
   configContent = configContent.replace('export const config = ', '');
   configContent = configContent.replace('// prettier-ignore\n', '');
 
   const gasSetupContent = `const CONFIGS = ${configContent}
 function getEsportsNotifier() {
+  const version = "${version}"
   const content = getGithubFileContent('lucasvtiradentes/esports-notifier', 'master');
   eval(\`this.EsportsNotifier = \` + content);
   const esportsNotifier = new EsportsNotifier(CONFIGS);
@@ -84,7 +100,7 @@ function checkTodayGames() {
   esportsNotifier.checkTodayGames();
 }
 
-function install() {
+function setup() {
   const esportsNotifier = getEsportsNotifier();
   esportsNotifier.install();
 }
@@ -104,5 +120,5 @@ function getGithubFileContent(repository, branch) {
   return decodedAsString;
 }`;
 
-  writeFileSync(`./dist/GAS-setup.js`, gasSetupContent);
+  writeFileSync(outFile, gasSetupContent);
 }

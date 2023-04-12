@@ -26,6 +26,7 @@ const CONFIGS = {
 };
 
 function getEsportsNotifier() {
+  const version = "0.0.1"
   const content = getGithubFileContent('lucasvtiradentes/esports-notifier', 'master');
   eval(`this.EsportsNotifier = ` + content);
   const esportsNotifier = new EsportsNotifier(CONFIGS);
@@ -37,7 +38,7 @@ function checkTodayGames() {
   esportsNotifier.checkTodayGames();
 }
 
-function install() {
+function setup() {
   const esportsNotifier = getEsportsNotifier();
   esportsNotifier.install();
 }
