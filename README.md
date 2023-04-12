@@ -1,7 +1,7 @@
 <a name="TOC"></a>
 
 <h3 align="center">
-  ESPORT NOTIFIER
+  ESPORTS NOTIFIER
 </h3>
 
 <div align="center">
@@ -53,7 +53,7 @@
 
 ## :trumpet: Overview
 
-Get a daily email informing what are the today matches of your favorite teams in a bunche of esports games, including [csgo](https://www.counter-strike.net/), [valorant](https://playvalorant.com/) and [league of legends](https://www.leagueoflegends.com/).
+Receive a **daily email** informing **whenever at least one of your favorite esports teams has a match** on the current date in a bunch of esports games, including _csgo_, _valorant_ and _league of legends_. See the complete game list <a href="#GAMES">here</a>.
 
 <div align="center">
   <table align="center">
@@ -74,12 +74,14 @@ Get a daily email informing what are the today matches of your favorite teams in
 
 ## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
-&nbsp;&nbsp;&nbsp;✔️ get daily email informing what are your favorite teams today matches;<br>
+&nbsp;&nbsp;&nbsp;✔️ receive a daily email informing whenever at least one of your favorite teams has a match in the current date;<br>
 &nbsp;&nbsp;&nbsp;✔️ select the games you are interested in to check for matches;<br>
 &nbsp;&nbsp;&nbsp;✔️ specify the time to send the daily email;<br>
-&nbsp;&nbsp;&nbsp;✔️ option to informe matches about only the current date or also from the following days.<br>
+&nbsp;&nbsp;&nbsp;✔️ option to inform matches about only the current date or also from the following days.<br>
 
-Also it is worth mentioning that the tool informs about the following games:
+<a name="GAMES"></a>
+
+It is worth mentioning that the tool currently informs about the following games:
 
 - [x] [counter-strike global offense](https://liquipedia.net/counterstrike/Liquipedia:Matches)
 - [x] [valorant](https://www.vlr.gg/matches)
@@ -93,17 +95,19 @@ Also it is worth mentioning that the tool informs about the following games:
 
 ## :warning: Requirements<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
-The only thing you need to use this solution is a `gmail/google account`.
+The only thing you need to use this project is a `gmail/google account`.
 
 ## :bulb: Usage<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
 ### How it works
 
-It basically sets a function to run in google apps scripts to run everyday at a specified time, and this function is responsable for:
+It basically sets a function to run in [google apps scripts](https://www.google.com/script/start/) to run everyday at a specified time, and this function is responsable for:
 
 - get all the the matches scheduled for the next couple of days in all games that you're interested in;
 - filter the matches list to get only the ones about your favorite teams;
 - if there's at least one game of your favorite teams, send you an email about informing the details.
+
+The matches list are obtained from a bunch of specialize sites. You can check the corresponding site of everygame by clicking in their links in <a href="#GAMES">this section</a>.
 
 ### Installation
 
@@ -120,7 +124,7 @@ To effectively use this project, do the following steps:
 </details>
 
 <details>
-  <summary>2 - setup the esports-notifier on GAS</summary>
+  <summary>2 - setup the esports-notifier code on GAS</summary>
   <div>
     <br>
     <p>Click on the initial file, which is the <b>rectangle-1</b> on the image.</p>
@@ -233,7 +237,16 @@ function uninstall() {
 </details>
 
 <details>
-  <summary>4 - setup the esports-notifier to run automatically every x minutes</summary>
+  <summary>4 - check if the tool is working as expected</summary>
+  <div>
+    <br>
+    <p>Go to the <code>esports-notifier</code> code page as it was explained in the <code>step 2</code> and on the header menu select <code>getEsportsNotifier</code> in the functions menu and run it, by clicking in the <code>Run</code> button.</p>
+    <p>If everything is okay, it is expected to you receive an email informing about your favorite teams matches if they have a game today. if there's an error, read the logs messages, adjust the necessary settings and try again.</p>
+  </div>
+</details>
+
+<details>
+  <summary>5 - setup the esports-notifier to run automatically every x minutes</summary>
   <div>
     <br>
     <p>Just follow what the bellow image shows, which is to select the <code>setup</code> function and run it.<br>
@@ -244,7 +257,7 @@ function uninstall() {
 
 ### Uninstall
 
-If you want to receive the daily emails, just go to the GAS respective project in the header dropbox menu select the `uninstall` function and then click on the `run` button. By doing that, the GAS trigger responsable for running everyday the function will be deleted.
+If you want to receive the daily emails, just go to the GAS respective project in the header dropdown menu select the `uninstall` function and then click on the `Run` button. By doing that, the GAS trigger responsable for running everyday the function will be deleted.
 
 <a href="#"><img src="./.github/images/divider.png" /></a>
 
@@ -313,7 +326,7 @@ This project uses the following thechnologies:
       <th>Technologies</th>
     </tr>
     <tr>
-      <td rowspan="1">Main</td>
+      <td rowspan="1">Project</td>
       <td>Main</td>
       <td align="center">
         <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white"></a>
@@ -364,10 +377,7 @@ This project is distributed under the terms of the MIT License Version 2.0. A co
 
 ## Feedback
 
-Any questions or suggestions? You are welcome to discuss it on:
-
-- [Github issues](https://github.com/lucasvtiradentes/esports-notifier/issues)
-- [Email](mailto:lucasvtiradentes@gmail.com)
+If you have any questions or suggestions you are welcome to discuss it on [github issues](https://github.com/lucasvtiradentes/esports-notifier/issues) or, if you prefer, you can reach me in my social media provided bellow.
 
 <a href="#"><img src="./.github/images/divider.png" /></a>
 

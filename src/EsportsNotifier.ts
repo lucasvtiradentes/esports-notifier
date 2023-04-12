@@ -509,7 +509,7 @@ export default class EsportsNotifier {
     ScriptApp.newTrigger(this.config.settings.loopFunction)
       .timeBased()
       .everyDays(1)
-      .atHour(Number(timeArr[0]) + this.config.datetime.diffHoursFromGmtTimezone)
+      .atHour(Number(timeArr[0]) - this.config.datetime.diffHoursFromGmtTimezone)
       .nearMinute(Number(timeArr[1]))
       .create();
   }

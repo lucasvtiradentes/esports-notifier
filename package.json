@@ -1,6 +1,6 @@
 {
   "name": "esports-notifier",
-  "description": "🔔 get email notifications informing when one of your favorite team has a game ",
+  "description": "🔔 receive a daily email informing whenever at least one of your favorite esports teams has a match in the current date.",
   "version": "1.0.0",
   "license": "MIT",
   "author": {
