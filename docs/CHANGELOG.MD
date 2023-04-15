@@ -1,5 +1,12 @@
 # CHANGELOG HISTORY
 
+## [1.1.0](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.0.2...v1.1.0) (2023-04-15)
+
+
+### ✨ feature:
+
+* show the game list in ascending order ([#17](https://github.com/lucasvtiradentes/esports-notifier/issues/17)) ([cf83cd6](https://github.com/lucasvtiradentes/esports-notifier/commit/cf83cd679665b0fd9484f3dc51cbe280a65ae69b))
+
 ## [1.0.2](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.0.1...v1.0.2) (2023-04-12)
 
 ## [1.0.1](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.0.0...v1.0.1) (2023-04-12)

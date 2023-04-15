@@ -165,7 +165,7 @@ const CONFIGS = {
 };
 
 function getEsportsNotifier(){
-  const version = "1.0.2"
+  const version = "1.1.0"
   const content = UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
   eval(content)
   const esportsNotifier = new EsportsNotifier(CONFIGS)
@@ -304,7 +304,7 @@ If you want to [contribute](./docs/CONTRIBUTING.md) to the project, fork the pro
 
 ```js
 function getEsportsNotifier() {
-  // const version = "1.0.2" // version
+  // const version = "1.1.0" // version
   // const content = getEsportsProduction(version)
   const content = getEsportsDevelopment('yourgithub/project-fork', 'branch_name');
   eval(content);
