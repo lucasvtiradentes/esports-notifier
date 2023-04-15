@@ -20,12 +20,15 @@ import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 
   const VERSION = JSON.parse(readFileSync(FILES.package, { encoding: 'utf8' })).version;
 
-  createSetupGasFile(FILES.gasSetup, VERSION);
-  createAppscriptFile(FILES.gasAppsScript);
+  const gasAllowPermissionFileContent = getGasAllowPermissionFileContent();
+  writeFileSync(FILES.gasAppsScript, gasAllowPermissionFileContent);
+
+  const gasSetupFileContent = getGasSetupGasFileContent(VERSION);
+  writeFileSync(FILES.gasSetup, gasSetupFileContent);
 
   const readmeFile = new DynMarkdown(FILES.readme);
-  readmeFile.updateField(README_FILES.gasSetupContent, readFileSync(FILES.gasSetup, { encoding: 'utf-8' }));
-  readmeFile.updateField(README_FILES.gasAppsScriptContent, readFileSync(FILES.gasAppsScript, { encoding: 'utf-8' }));
+  readmeFile.updateField(README_FILES.gasSetupContent, `<pre>\n${gasSetupFileContent}\n</pre>`);
+  readmeFile.updateField(README_FILES.gasAppsScriptContent, `<pre>\n${gasAllowPermissionFileContent}\n</pre>`);
   readmeFile.saveFile();
 
   const VERSION_UPDATE = `// version`;
@@ -56,7 +59,7 @@ async function minifyFile(filePath: string, outFile: string) {
   writeFileSync(outFile, minifiedContent);
 }
 
-function createAppscriptFile(outFile: string) {
+function getGasAllowPermissionFileContent() {
   const appsScript = `{
   "timeZone": "Etc/GMT",
   "dependencies": {
@@ -78,10 +81,10 @@ function createAppscriptFile(outFile: string) {
   "runtimeVersion": "V8"
 }`;
 
-  writeFileSync(outFile, appsScript);
+  return appsScript;
 }
 
-function createSetupGasFile(outFile: string, version: string) {
+function getGasSetupGasFileContent(version: string) {
   let configContent = readFileSync('./resources/config.ts', { encoding: 'utf-8' });
   configContent = configContent.replace('export const config = ', '');
   configContent = configContent.replace('// prettier-ignore\n', '');
@@ -110,5 +113,5 @@ function uninstall() {
   esportsNotifier.uninstall();
 }`;
 
-  writeFileSync(outFile, gasSetupContent);
+  return gasSetupContent;
 }

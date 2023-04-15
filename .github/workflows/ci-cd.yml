@@ -13,7 +13,6 @@ permissions:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  MOVE_TO_PROJEC_TOKEN: ${{ secrets.MOVE_TO_PROJEC_TOKEN }}
 
 jobs:
   nodejs-ci:

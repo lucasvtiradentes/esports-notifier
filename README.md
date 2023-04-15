@@ -5,10 +5,12 @@
 </h3>
 
 <div align="center">
-  <a href="https://www.npmjs.com/package/esports-notifier"><img src="https://img.shields.io/npm/v/esports-notifier.svg?style=flat" alt="npm version"></a>
   <a href="https://nodejs.org/en/"><img src="https://img.shields.io/badge/made%20with-node-1f425f?logo=node.js&.svg" /></a>
   <a href="https://www.google.com/script/start/"><img src="https://img.shields.io/badge/apps%20script-4285F4?logo=google&logoColor=white" /></a>
   <a href="https://github.com/lucasvtiradentes/esports-notifier#contributing"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions" /></a>
+  <br>
+  <a href="https://www.npmjs.com/package/esports-notifier"><img src="https://img.shields.io/npm/v/esports-notifier.svg?style=flat" alt="npm version"></a>
+  <a href="https://github.com/lucasvtiradentes/esports-notifier/actions/workflows/ci-cd.yml"><img src="https://github.com/lucasvtiradentes/esports-notifier/workflows/CI/badge.svg"/></a>
 </div>
 
 <p align="center">
@@ -55,7 +57,7 @@
 
 ## :trumpet: Overview
 
-Receive a **daily email** informing **whenever at least one of your favorite esports teams has a match** on the current date in a bunch of esports games, including _csgo_, _valorant_ and _rainbow six siege_. See the complete game list <a href="#GAMES">here</a>.
+Receive a **daily email** informing **whenever at least one of your favorite esports teams has a match** on the current date in a bunch of esports games, including _csgo_, _valorant_ and _rainbow six siege_.
 
 <div align="center">
   <table align="center">
@@ -74,20 +76,13 @@ Receive a **daily email** informing **whenever at least one of your favorite esp
  </table>
 </div>
 
-## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
-
-&nbsp;&nbsp;&nbsp;✔️ receive a daily email informing whenever at least one of your favorite teams has a match in the current date;<br>
-&nbsp;&nbsp;&nbsp;✔️ select the games you are interested in to check for matches;<br>
-&nbsp;&nbsp;&nbsp;✔️ specify the time to send the daily email;<br>
-&nbsp;&nbsp;&nbsp;✔️ option to inform matches about only the current date or also from the following days.<br>
-
 <a name="GAMES"></a>
 
-It is worth mentioning that the tool currently informs about the following games:
+It is worth mentioning that the tool currently informs about the following games with each respective source:
 
-- [x] [counter-strike global offense](https://liquipedia.net/counterstrike/Liquipedia:Matches)
-- [x] [valorant](https://www.vlr.gg/matches)
-- [x] [rainbow six siege](https://siege.gg/matches)
+- [x] counter-strike global offense: [liquipedia](https://liquipedia.net/counterstrike/Liquipedia:Matches)
+- [x] valorant: [vlr.gg](https://www.vlr.gg/matches)
+- [x] rainbow six siege: [siege.gg](https://siege.gg/matches)
 <!--
 - [ ] overwatch 2
 - [ ] dota 2
@@ -96,6 +91,13 @@ It is worth mentioning that the tool currently informs about the following games
 - [ ] rocket league
 - [ ] call of duty
       -->
+
+## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
+
+&nbsp;&nbsp;&nbsp;✔️ receive a daily email informing whenever at least one of your favorite teams has a match in the current date;<br>
+&nbsp;&nbsp;&nbsp;✔️ select the games you are interested in to check for matches;<br>
+&nbsp;&nbsp;&nbsp;✔️ specify the time to send the daily email;<br>
+&nbsp;&nbsp;&nbsp;✔️ option to inform matches about only the current date or also from the following days.<br>
 
 ## :warning: Requirements<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
@@ -139,8 +141,8 @@ To effectively use this project, do the following steps:
        Remember to update the <code>CONFIGS</code> object according to your data and needs.</p>
     </blockquote>
 
-<pre>
 <!-- <DYNFIELD:GAS_SETUP> -->
+<pre>
 const CONFIGS = {
   esports: {
     favoriteTeams: ['loud', 'mibr', 'imperial'], // specify your favorite teams
@@ -184,8 +186,8 @@ function uninstall() {
   const esportsNotifier = getEsportsNotifier();
   esportsNotifier.uninstall();
 }
-<!-- </DYNFIELD:GAS_SETUP> -->
 </pre>
+<!-- </DYNFIELD:GAS_SETUP> -->
   </div>
 </details>
 
@@ -207,8 +209,8 @@ function uninstall() {
       </table>
     </div>
     <p>Go back to the project files, and replace the content present in the <code>appsscript.json</code> with the following code:</p>    <p align="center"><img width="500" src="./.github/images/tutorial/tut5.png" /></p>
-    <pre>
 <!-- <DYNFIELD:GAS_APPSSCRIPT> -->
+<pre>
 {
   "timeZone": "Etc/GMT",
   "dependencies": {
@@ -229,8 +231,8 @@ function uninstall() {
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8"
 }
-<!-- </DYNFIELD:GAS_APPSSCRIPT> -->
 </pre>
+<!-- </DYNFIELD:GAS_APPSSCRIPT> -->
   </div>
 </details>
 
@@ -268,6 +270,8 @@ function getEsportsNotifier(){
 </pre>
 
 So if your instance is running at version "1.0.0" and the latest is "3.6.1", just replace those numbers in the `version` variable.
+
+It is a good practice to go to the [dist folder](./dist/) everytime you update your instance to check if your files in GAS have same properties as the new version; if they're not this may cause errors.
 
 ### Uninstall
 
