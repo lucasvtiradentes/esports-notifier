@@ -53,21 +53,21 @@ type CheerioItem = any;
 /* -------------------------------------------------------------------------- */
 
 export default class EsportsNotifier {
-  VERSION = ''; // version
-  APPNAME = 'esports notifier';
-  GITHUB_REPOSITORY = 'lucasvtiradentes/esports-notifier';
-  TODAY_DATE = '';
-  SESSION_LOGS = [];
-  ENVIRONMENT = this.detectEnvironment();
-  USER_EMAIL = this.ENVIRONMENT === 'production' ? this.getUserEmail() : '';
-  ERRORS = {
+  private VERSION = ''; // version
+  private APPNAME = 'esports notifier';
+  private GITHUB_REPOSITORY = 'lucasvtiradentes/esports-notifier';
+  private TODAY_DATE = '';
+  private SESSION_LOGS = [];
+  private ENVIRONMENT = this.detectEnvironment();
+  private USER_EMAIL = this.ENVIRONMENT === 'production' ? this.getUserEmail() : '';
+  private ERRORS = {
     mustSpecifyConfig: 'You must specify the settings when starting the class',
     timeToSendEmailIncorrect: 'You must specify a correct time string in config.datetime.timeToSendEmail, such as: 07:00'
   };
   public todayMatches: Game[] = [];
   public todayFavoriteTeamsMatches: Game[] = [];
 
-  constructor(public config: Config) {
+  constructor(private config: Config) {
     this.validateConfigs(config);
     this.config = config;
     this.TODAY_DATE = this.getDateFixedByTimezone(new Date(), this.config.datetime.diffHoursFromGmtTimezone).toISOString().split('T')[0];
@@ -328,6 +328,10 @@ export default class EsportsNotifier {
 
   /* GET MATCHES FUNCTIONS ================================================== */
 
+  private sortGamesByDatetime(arr: Game[]) {
+    return arr.sort((a, b) => Number(new Date(`${a.date}T${a.time}`)) - Number(new Date(`${b.date}T${b.time}`)));
+  }
+
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
 
@@ -343,7 +347,7 @@ export default class EsportsNotifier {
       allMatches.push(...this.getR6Matches());
     }
 
-    this.todayMatches = allMatches.sort((a, b) => Number(new Date(`${a.date}T${a.time}`)) - Number(new Date(`${b.date}T${b.time}`)));
+    this.todayMatches = this.sortGamesByDatetime(allMatches);
     this.logger(`there were found ${this.todayMatches.length} matches across all selected games`, 'before');
 
     return this.todayMatches;
@@ -361,7 +365,7 @@ export default class EsportsNotifier {
       }
     });
 
-    this.todayFavoriteTeamsMatches = favoriteTeamsMatches;
+    this.todayFavoriteTeamsMatches = this.sortGamesByDatetime(favoriteTeamsMatches);
     this.logger(`there were found ${this.todayFavoriteTeamsMatches.length} of your favorite teams in the next coulpe of days`);
 
     return this.todayFavoriteTeamsMatches;
@@ -455,7 +459,7 @@ export default class EsportsNotifier {
 
     MailApp.sendEmail({
       to: this.USER_EMAIL,
-      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} ${favoriteTeamsMatches.length === 1 ? 'game' : 'games'} of your favorite teams ${this.config.settings.notifyOnlyAboutTodayGames ? `${this.TODAY_DATE}` : 'soon'}`,
+      subject: `${this.APPNAME} - ${favoriteTeamsMatches.length} ${favoriteTeamsMatches.length === 1 ? 'game' : 'games'} of your favorite teams ${this.config.settings.notifyOnlyAboutTodayGames ? `today - ${this.TODAY_DATE}` : 'soon'}`,
       htmlBody: this.generateEmailContent(favoriteTeamsMatches)
     });
   }
