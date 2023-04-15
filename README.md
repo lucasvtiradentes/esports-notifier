@@ -240,7 +240,7 @@ function uninstall() {
   <summary>4 - check if the tool is working as expected</summary>
   <div>
     <br>
-    <p>Go to the <code>esports-notifier</code> code page as it was explained in the <code>step 2</code> and on the header menu select <code>getEsportsNotifier</code> in the functions menu and run it, by clicking in the <code>Run</code> button.</p>
+    <p>Go to the <code>esports-notifier</code> code page as it was explained in the <code>step 2</code> and on the header menu select <code>checkTodayGames</code> in the functions menu and run it, by clicking in the <code>Run</code> button.</p>
     <p>If everything is okay, it is expected to you receive an email informing about your favorite teams matches if they have a game today. if there's an error, read the logs messages, adjust the necessary settings and try again.</p>
   </div>
 </details>
@@ -306,7 +306,7 @@ If you want to [contribute](./docs/CONTRIBUTING.md) to the project, fork the pro
 function getEsportsNotifier() {
   // const version = "1.0.2" // version
   // const content = getEsportsProduction(version)
-  const content = getEsportsDevelopment('yourgithub/project-fork', 'develop');
+  const content = getEsportsDevelopment('yourgithub/project-fork', 'branch_name');
   eval(content);
   const esportsNotifier = new EsportsNotifier(CONFIGS);
   return esportsNotifier;
