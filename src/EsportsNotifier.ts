@@ -7,6 +7,7 @@ type Config = {
       csgo: boolean;
       valorant: boolean;
       rainbowSixSiege: boolean;
+      leagueOfLegends: boolean;
     };
   };
   datetime: {
@@ -84,7 +85,7 @@ export default class EsportsNotifier {
     const validationArr = [
       { objToCheck: config, requiredKeys: ['esports', 'datetime', 'settings'], name: 'configs' },
       { objToCheck: config?.esports, requiredKeys: ['favoriteTeams', 'games'], name: 'configs.esports' },
-      { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege'], name: 'configs.esports.games' },
+      { objToCheck: config?.esports?.games, requiredKeys: ['csgo', 'valorant', 'rainbowSixSiege', 'leagueOfLegends'], name: 'configs.esports.games' },
       { objToCheck: config?.datetime, requiredKeys: ['diffHoursFromGmtTimezone', 'timeToSendEmail'], name: 'configs.datetime' },
       { objToCheck: config?.settings, requiredKeys: ['notifyOnlyAboutTodayGames', 'strictTeamComparasion', 'maintanceMode', 'loopFunction'], name: 'configs.settings' }
     ];
@@ -151,26 +152,25 @@ export default class EsportsNotifier {
 
   /* GET MATCHES FUNCTIONS ================================================== */
 
-  private getCsgoMatches() {
+  private getGamesFromLiquipedia(props: { pathUrl: string; gameName: Games; gameImage: string }) {
     const LIQUEDPEDIA_LINK = 'https://liquipedia.net';
-    const CSGO_API = `${LIQUEDPEDIA_LINK}/counterstrike/Liquipedia:Matches`; // /Main_Page
+    const sourceLink = `${LIQUEDPEDIA_LINK}/${props.pathUrl}`;
 
-    const content = this.getPageContent(CSGO_API);
+    const content = this.getPageContent(sourceLink);
     const $ = this.parseHtmlData(content);
-    const csgoMatches = $('table.infobox_matches_content');
+    const matchesArr = $('table.infobox_matches_content');
 
-    // data-toggle-area-content
-    const getTeamName = (item) => {
-      const foundItem = item.children.find((it) => it.attribs?.class.search('team-template-text') > -1);
+    const getTeamName = (item: CheerioItem) => {
+      const foundItem = item.children.find((it: CheerioItem) => it.attribs?.class.search('team-template-text') > -1);
       return foundItem?.children[0]?.children[0]?.data;
     };
 
-    const getTeamImage = (item) => {
+    const getTeamImage = (item: CheerioItem) => {
       const foundItem = item.children.find((it) => it.attribs?.class.search('team-template-image-icon') > -1);
       return foundItem?.children[0]?.children[0]?.attribs?.src;
     };
 
-    const matchesInfoArr = Array.from(csgoMatches)
+    const matchesInfoArr = Array.from(matchesArr)
       .filter((item: CheerioItem) => item.parent.attribs['data-toggle-area-content'] === '1')
       .map((item: CheerioItem) => {
         const dateTime = this.getDateFixedByTimezone(new Date(item.children[1].children[2].children[1].children[0].children[0].children[0].data.replace('- ', '')), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
@@ -188,9 +188,9 @@ export default class EsportsNotifier {
 
         const gameInfo: Game = {
           game: {
-            name: 'csgo',
-            image: 'https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png',
-            link: CSGO_API
+            name: props.gameName,
+            image: props.gameImage,
+            link: sourceLink
           },
           teamA: {
             name: teamAName,
@@ -212,60 +212,25 @@ export default class EsportsNotifier {
         return gameInfo;
       });
 
-    this.logger(`found ${matchesInfoArr.length} csgo matches`);
-
     return matchesInfoArr;
   }
 
+  private getLolMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'leagueOfLegends', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png?20201029024159', pathUrl: 'leagueoflegends/Liquipedia:Matches' });
+    this.logger(`found ${matches.length} lol matches`);
+    return matches;
+  }
+
+  private getCsgoMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'csgo', gameImage: 'https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png', pathUrl: 'counterstrike/Liquipedia:Matches' });
+    this.logger(`found ${matches.length} csgo matches`);
+    return matches;
+  }
+
   private getR6Matches() {
-    const RAINBOW_SIX_SOURCE = 'https://siege.gg';
-    const RAINBOW_SIX_SIEGE_MATCHES_PAGE = `${RAINBOW_SIX_SOURCE}/matches`;
-    const content = this.getPageContent(RAINBOW_SIX_SIEGE_MATCHES_PAGE);
-    const $ = this.parseHtmlData(content);
-
-    const r6Matches = $('a.match--awaiting-results'); // match--has-results
-    const matchesInfoArr = Array.from(r6Matches).map((item: CheerioItem) => {
-      const dateTimeFixedStr = this.getDateFixedByTimezone(new Date(item.children[0].attribs['data-time']), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
-
-      const matchDate = dateTimeFixedStr.split('T')[0];
-      const matchTime = dateTimeFixedStr.split('T')[1].slice(0, 5);
-      const event = item.children[0].children[2].children[0].data;
-      const link = item.attribs.href;
-      const teamAName = item.children[1].children[0].children[0].children[2].children[0].data.trim();
-      const teamAImage = item.children[1].children[0].children[0].children[0].attribs.src;
-      const teamACountryImage = item.children[1].children[0].children[0].children[1].children[0].attribs.src;
-      const teamBName = item.children[1].children[2].children[0].children[2].children[0].data.trim();
-      const teamBImage = item.children[1].children[2].children[0].children[0].attribs.src;
-      const teamBCountryImage = item.children[1].children[2].children[0].children[1].children[0].attribs.src;
-
-      const gameInfo: Game = {
-        game: {
-          name: 'rainbowSixSiege',
-          image: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png',
-          link: RAINBOW_SIX_SIEGE_MATCHES_PAGE
-        },
-        teamA: {
-          name: teamAName,
-          image: teamAImage,
-          countryImage: teamACountryImage
-        },
-        teamB: {
-          name: teamBName,
-          image: teamBImage,
-          countryImage: teamBCountryImage
-        },
-        teams: [teamAName, teamBName],
-        date: matchDate,
-        time: matchTime,
-        event: event,
-        link: `${RAINBOW_SIX_SOURCE}${link}`
-      };
-
-      return gameInfo;
-    });
-
-    this.logger(`found ${matchesInfoArr.length} rainbowSixSiege matches`);
-    return matchesInfoArr;
+    const matches = this.getGamesFromLiquipedia({ gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches' });
+    this.logger(`found ${matches.length} r6 matches`);
+    return matches;
   }
 
   private getValorantMatches() {
@@ -334,6 +299,10 @@ export default class EsportsNotifier {
 
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
+
+    if (this.config.esports.games.leagueOfLegends) {
+      allMatches.push(...this.getLolMatches());
+    }
 
     if (this.config.esports.games.csgo) {
       allMatches.push(...this.getCsgoMatches());
