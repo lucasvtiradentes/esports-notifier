@@ -10,6 +10,7 @@ type Config = {
       leagueOfLegends: boolean;
       overwatch: boolean;
       rocketLeague: boolean;
+      dota: boolean;
     };
   };
   datetime: {
@@ -217,6 +218,12 @@ export default class EsportsNotifier {
     return matchesInfoArr;
   }
 
+  private getDotaMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'dota', gameImage: 'https://seeklogo.com/images/D/dota-2-logo-C88DABB066-seeklogo.com.png', pathUrl: 'dota2/Liquipedia:Upcoming_and_ongoing_matches' });
+    this.logger(`found ${matches.length} dota matches`);
+    return matches;
+  }
+
   private getRocketLeagueMatches() {
     const matches = this.getGamesFromLiquipedia({ gameName: 'rocketLeague', gameImage: 'https://upload.wikimedia.org/wikipedia/he/thumb/6/68/Rocket_league_logo_1.jpeg/675px-Rocket_league_logo_1.jpeg?20210526204716', pathUrl: 'rocketleague/Liquipedia:Matches' });
     this.logger(`found ${matches.length} rocketLeague matches`);
@@ -313,6 +320,10 @@ export default class EsportsNotifier {
 
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
+
+    if (this.config.esports.games.dota) {
+      allMatches.push(...this.getDotaMatches());
+    }
 
     if (this.config.esports.games.rocketLeague) {
       allMatches.push(...this.getRocketLeagueMatches());

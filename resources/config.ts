@@ -8,7 +8,8 @@ export const config = {
       rainbowSixSiege: true,
       leagueOfLegends: true,
       overwatch: true,
-      rocketLeague: true
+      rocketLeague: true,
+      dota: true
     }
   },
   datetime: {
