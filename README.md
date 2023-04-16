@@ -80,9 +80,9 @@ Receive a **daily email** informing **whenever at least one of your favorite esp
 
 It is worth mentioning that the tool currently informs about the following games with each respective source:
 
-- [x] counter-strike global offense: [liquipedia](https://liquipedia.net/counterstrike/Liquipedia:Matches)
 - [x] valorant: [vlr.gg](https://www.vlr.gg/matches)
-- [x] rainbow six siege: [siege.gg](https://siege.gg/matches)
+- [x] counter-strike global offense: [liquipedia](https://liquipedia.net/counterstrike/Liquipedia:Matches)
+- [x] rainbow six siege: [liquipedia](https://liquipedia.net/rainbowsix/Liquipedia:Upcoming_and_ongoing_matches)
 - [x] league of legends: [liquipedia](https://liquipedia.net/leagueoflegends/Liquipedia:Matches)
 - [x] overwatch: [liquipedia](https://liquipedia.net/overwatch/Liquipedia:Upcoming_and_ongoing_matches)
 - [x] rocket league: [liquipedia](https://liquipedia.net/rocketleague/Liquipedia:Matches)
