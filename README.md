@@ -85,11 +85,11 @@ It is worth mentioning that the tool currently informs about the following games
 - [x] rainbow six siege: [siege.gg](https://siege.gg/matches)
 - [x] league of legends: [liquipedia](https://liquipedia.net/leagueoflegends/Liquipedia:Matches)
 - [x] overwatch: [liquipedia](https://liquipedia.net/overwatch/Liquipedia:Upcoming_and_ongoing_matches)
+- [x] rocket league: [liquipedia](https://liquipedia.net/rocketleague/Liquipedia:Matches)
 
 <!--
 - [ ] dota 2
 - [ ] free fire
-- [ ] rocket league
 - [ ] call of duty
       -->
 
@@ -152,7 +152,8 @@ const CONFIGS = {
       valorant: true,
       rainbowSixSiege: true,
       leagueOfLegends: true,
-      overwatch: true
+      overwatch: true,
+      rocketLeague: true
     }
   },
   datetime: {

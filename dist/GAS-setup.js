@@ -6,7 +6,8 @@ const CONFIGS = {
       valorant: true,
       rainbowSixSiege: true,
       leagueOfLegends: true,
-      overwatch: true
+      overwatch: true,
+      rocketLeague: true
     }
   },
   datetime: {

@@ -7,7 +7,8 @@ export const config = {
       valorant: true,
       rainbowSixSiege: true,
       leagueOfLegends: true,
-      overwatch: true
+      overwatch: true,
+      rocketLeague: true
     }
   },
   datetime: {
