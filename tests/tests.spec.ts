@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import EsportsNotifier from '../src/EsportsNotifier';
 import { config } from '../resources/config';
 

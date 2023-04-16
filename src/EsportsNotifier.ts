@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+type GameOption = {
+  sync: boolean;
+  teams: string[];
+};
+
 type Config = {
   esports: {
     favoriteTeams: string[];
     games: {
-      csgo: boolean;
-      valorant: boolean;
-      rainbowSixSiege: boolean;
-      leagueOfLegends: boolean;
-      overwatch: boolean;
-      rocketLeague: boolean;
-      dota: boolean;
-      callOfDuty: boolean;
+      csgo: GameOption;
+      valorant: GameOption;
+      rainbowSixSiege: GameOption;
+      leagueOfLegends: GameOption;
+      overwatch: GameOption;
+      rocketLeague: GameOption;
+      dota: GameOption;
+      callOfDuty: GameOption;
     };
   };
   datetime: {
@@ -26,11 +31,11 @@ type Config = {
   };
 };
 
-type Games = keyof Config['esports']['games'];
+type GameName = keyof Config['esports']['games'];
 
-type Game = {
+type MatchInfo = {
   game: {
-    name: Games;
+    name: GameName;
     image: string;
     link: string;
   };
@@ -70,8 +75,8 @@ export default class EsportsNotifier {
     mustSpecifyConfig: 'You must specify the settings when starting the class',
     timeToSendEmailIncorrect: 'You must specify a correct time string in config.datetime.timeToSendEmail, such as: 07:00'
   };
-  public todayMatches: Game[] = [];
-  public todayFavoriteTeamsMatches: Game[] = [];
+  public todayMatches: MatchInfo[] = [];
+  public todayFavoriteTeamsMatches: MatchInfo[] = [];
 
   constructor(private config: Config) {
     this.validateConfigs(config);
@@ -157,7 +162,7 @@ export default class EsportsNotifier {
 
   /* GET MATCHES FUNCTIONS ================================================== */
 
-  private getGamesFromLiquipedia(props: { pathUrl: string; gameName: Games; gameImage: string; liquipediaPageType: 1 | 2 | 3 }) {
+  private getGamesFromLiquipedia(props: { pathUrl: string; gameName: GameName; gameImage: string; liquipediaPageType: 1 | 2 | 3 }) {
     const LIQUEDPEDIA_LINK = 'https://liquipedia.net';
     const sourceLink = `${LIQUEDPEDIA_LINK}/${props.pathUrl}`;
 
@@ -221,7 +226,7 @@ export default class EsportsNotifier {
         const teamBImage = getTeamImage(teamBElement);
         const teamBCountryImage = '';
 
-        const gameInfo: Game = {
+        const gameInfo: MatchInfo = {
           game: {
             name: props.gameName,
             image: props.gameImage,
@@ -288,7 +293,7 @@ export default class EsportsNotifier {
   }
 
   private getR6Matches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 1 });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 2 });
     this.logger(`found ${matches.length} r6 matches`);
     return matches;
   }
@@ -321,7 +326,7 @@ export default class EsportsNotifier {
       const teamBImage = '';
       const teamBCountryImage = item.children[3].children[3].children[1].children[1].children[1].attribs.class.replace('flag ', '');
 
-      const gameInfo: Game = {
+      const gameInfo: MatchInfo = {
         game: {
           name: 'valorant',
           image: 'https://seeklogo.com/images/V/valorant-logo-FAB2CA0E55-seeklogo.com.png',
@@ -354,42 +359,42 @@ export default class EsportsNotifier {
 
   /* GET MATCHES FUNCTIONS ================================================== */
 
-  private sortGamesByDatetime(arr: Game[]) {
+  private sortGamesByDatetime(arr: MatchInfo[]) {
     return arr.sort((a, b) => Number(new Date(`${a.date}T${a.time}`)) - Number(new Date(`${b.date}T${b.time}`)));
   }
 
   private getAllTodayMatches() {
-    const allMatches: Game[] = [];
+    const allMatches: MatchInfo[] = [];
 
-    if (this.config.esports.games.callOfDuty) {
+    if (this.config.esports.games.callOfDuty.sync) {
       allMatches.push(...this.getCallOfDutyMatches());
     }
 
-    if (this.config.esports.games.dota) {
+    if (this.config.esports.games.dota.sync) {
       allMatches.push(...this.getDotaMatches());
     }
 
-    if (this.config.esports.games.rocketLeague) {
+    if (this.config.esports.games.rocketLeague.sync) {
       allMatches.push(...this.getRocketLeagueMatches());
     }
 
-    if (this.config.esports.games.overwatch) {
+    if (this.config.esports.games.overwatch.sync) {
       allMatches.push(...this.getOverwatchMatches());
     }
 
-    if (this.config.esports.games.leagueOfLegends) {
+    if (this.config.esports.games.leagueOfLegends.sync) {
       allMatches.push(...this.getLolMatches());
     }
 
-    if (this.config.esports.games.csgo) {
+    if (this.config.esports.games.csgo.sync) {
       allMatches.push(...this.getCsgoMatches());
     }
 
-    if (this.config.esports.games.valorant) {
+    if (this.config.esports.games.valorant.sync) {
       allMatches.push(...this.getValorantMatches());
     }
 
-    if (this.config.esports.games.rainbowSixSiege) {
+    if (this.config.esports.games.rainbowSixSiege.sync) {
       allMatches.push(...this.getR6Matches());
     }
 
@@ -399,19 +404,34 @@ export default class EsportsNotifier {
     return this.todayMatches;
   }
 
-  private getFavoriteTeamsMatches(allMatches: Game[]) {
-    const lowercaseFavoriteTeams = this.config.esports.favoriteTeams.map((team) => team.toLowerCase());
+  private getFavoriteTeamsMatches(allMatches: MatchInfo[]) {
+    let filteredMatches: MatchInfo[] = [];
 
-    const favoriteTeamsMatches = allMatches.filter((item) => {
+    filteredMatches = allMatches.filter((item) => {
       const lowerCaseMatchTeams = item.teams.map((team) => team.toLowerCase());
+
+      const lowercaseFavoriteTeams = this.config.esports.favoriteTeams.map((team) => team.toLowerCase());
+      let isGlobalFavoriteTeam = false;
       if (this.config.settings.strictTeamComparasion) {
-        return lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.includes(matchTeam.toLowerCase()));
+        isGlobalFavoriteTeam = lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.includes(matchTeam.toLowerCase()));
       } else {
-        return lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.filter((favTeam) => matchTeam.search(favTeam) > -1).length > 0);
+        isGlobalFavoriteTeam = lowerCaseMatchTeams.some((matchTeam) => lowercaseFavoriteTeams.filter((favTeam) => matchTeam.search(favTeam) > -1).length > 0);
       }
+
+      let isGameFavoriteTeam = false;
+      const gameOptions = this.config.esports.games[item.game.name];
+      const lowerCaseGameTeams = gameOptions.teams.map((team) => team.toLowerCase());
+
+      if (this.config.settings.strictTeamComparasion) {
+        isGameFavoriteTeam = lowerCaseMatchTeams.some((matchTeam) => lowerCaseGameTeams.includes(matchTeam.toLowerCase()));
+      } else {
+        isGameFavoriteTeam = lowerCaseMatchTeams.some((matchTeam) => lowerCaseGameTeams.filter((favTeam) => matchTeam.search(favTeam) > -1).length > 0);
+      }
+
+      return isGlobalFavoriteTeam || isGameFavoriteTeam;
     });
 
-    this.todayFavoriteTeamsMatches = this.sortGamesByDatetime(favoriteTeamsMatches);
+    this.todayFavoriteTeamsMatches = this.sortGamesByDatetime(filteredMatches);
     this.logger(`there were found ${this.todayFavoriteTeamsMatches.length} of your favorite teams in the next coulpe of days`);
 
     return this.todayFavoriteTeamsMatches;
@@ -419,7 +439,7 @@ export default class EsportsNotifier {
 
   /* SEND EMAIL FUNCTIONS =================================================== */
 
-  private generateEmailContent(gamesToInform: Game[]) {
+  private generateEmailContent(gamesToInform: MatchInfo[]) {
     let emailHtml = '';
 
     const tableStyle = `border: 1px solid #333; width: 90%`;
@@ -430,20 +450,21 @@ export default class EsportsNotifier {
     const header = `<tr style="${rowStyle}">
                       <th style="${columnStyle}">Time</th>
                       <th style="${columnStyle}">Match</th>
-                      <th style="${columnStyle}">Game</th>
+                      <th style="${columnStyle}">MatchInfo</th>
                     </tr>`;
 
     const getTableBodyItemsHtml = () => {
       return gamesToInform
         .map((item) => {
-          // prettier-ignore
-
           const teamAImage = item.teamA.image || item.teamA.countryImage || '';
           const teamBImage = item.teamB.image || item.teamB.countryImage || '';
 
+          // prettier-ignore
           const itemRow = `<tr style="${rowStyle}">
                             <td style="${columnStyle}">
-                              <div style="text-align: center;">${this.config.settings.notifyOnlyAboutTodayGames ? `<p style="white-space: nowrap;">${item.time}</p>` : `<p style="white-space: nowrap;">${item.date}</p><p style="white-space: nowrap;">${item.time}</p>`}</div>
+                              <div style="text-align: center;">
+                                ${this.config.settings.notifyOnlyAboutTodayGames ? `<p style="white-space: nowrap;">${item.time}</p>` : `<p style="white-space: nowrap;">${item.date === this.TODAY_DATE ? `<span style="color: red;">${item.date}</span>` : item.date}</p><p style="white-space: nowrap;">${item.time}</p>`}
+                              </div>
                             </td>
                             <td style="${columnStyle} padding: 10px 0;">
                               <a href="${item.link}">
@@ -496,7 +517,7 @@ export default class EsportsNotifier {
     return emailHtml;
   }
 
-  private sendEmail(favoriteTeamsMatches: Game[]) {
+  private sendEmail(favoriteTeamsMatches: MatchInfo[]) {
     if (favoriteTeamsMatches.length === 0) {
       return;
     }

@@ -1,15 +1,39 @@
 const CONFIGS = {
   esports: {
-    favoriteTeams: ['loud', 'mibr', 'imperial'], // specify your favorite teams
-    games: {                                     // select the games you're interested
-      csgo: true,
-      valorant: true,
-      rainbowSixSiege: true,
-      leagueOfLegends: true,
-      overwatch: true,
-      rocketLeague: true,
-      dota: true,
-      callOfDuty: true
+    favoriteTeams: ['mibr'],              // specify your global favorite teams, that will be search in all games
+    games: {                              // select the games you're interested
+      csgo: {
+        sync: true,
+        teams: ['imperial']               // specify the teams you want to search only in this game
+      },
+      valorant: {
+        sync: true,
+        teams: ['sentinels', 'furia', 'loud', 'mibr']
+      },
+      rainbowSixSiege: {
+        sync: true,
+        teams: ['nip', 'faze', 'liquid', 'w7m']
+      },
+      leagueOfLegends: {
+        sync: true,
+        teams: []
+      },
+      overwatch: {
+        sync: true,
+        teams: []
+      },
+      rocketLeague: {
+        sync: true,
+        teams: []
+      },
+      dota: {
+        sync: true,
+        teams: []
+      },
+      callOfDuty: {
+        sync: true,
+        teams: []
+      }
     }
   },
   datetime: {
@@ -18,9 +42,9 @@ const CONFIGS = {
   },
   settings: {
     notifyOnlyAboutTodayGames: true,             // if 'false' it will alse send email in case of matchs of favorite teams in the next days
-    strictTeamComparasion: false,                // if 'true' the name of the teams must be exact in all the matches source sites
-    maintanceMode: false,                        // development option dont need to change
-    loopFunction: 'checkTodayGames'              // development option dont need to change
+    strictTeamComparasion: true,                 // if 'true' the name of the teams must be exact in all the matches source sites
+    maintanceMode: false,                        // development option, dont need to change
+    loopFunction: 'checkTodayGames'              // development option, dont need to change
   }
 };
 

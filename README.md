@@ -93,6 +93,7 @@ It is worth mentioning that the tool currently informs about the following games
 
 &nbsp;&nbsp;&nbsp;✔️ receive a daily email informing whenever at least one of your favorite teams has a match in the current date;<br>
 &nbsp;&nbsp;&nbsp;✔️ select the games you are interested in to check for matches;<br>
+&nbsp;&nbsp;&nbsp;✔️ option to specify teams per each game;<br>
 &nbsp;&nbsp;&nbsp;✔️ specify the time to send the daily email;<br>
 &nbsp;&nbsp;&nbsp;✔️ option to inform matches about only the current date or also from the following days.<br>
 
@@ -142,16 +143,40 @@ To effectively use this project, do the following steps:
 <pre>
 const CONFIGS = {
   esports: {
-    favoriteTeams: ['loud', 'mibr', 'imperial'], // specify your favorite teams
-    games: {                                     // select the games you're interested
-      csgo: true,
-      valorant: true,
-      rainbowSixSiege: true,
-      leagueOfLegends: true,
-      overwatch: true,
-      rocketLeague: true,
-      dota: true,
-      callOfDuty: true
+    favoriteTeams: ['mibr'],              // specify your global favorite teams, that will be search in all games
+    games: {                              // select the games you're interested
+      csgo: {
+        sync: true,
+        teams: ['imperial']               // specify the teams you want to search only in this game
+      },
+      valorant: {
+        sync: true,
+        teams: ['sentinels', 'furia', 'loud', 'mibr']
+      },
+      rainbowSixSiege: {
+        sync: true,
+        teams: ['nip', 'faze', 'liquid', 'w7m']
+      },
+      leagueOfLegends: {
+        sync: true,
+        teams: []
+      },
+      overwatch: {
+        sync: true,
+        teams: []
+      },
+      rocketLeague: {
+        sync: true,
+        teams: []
+      },
+      dota: {
+        sync: true,
+        teams: []
+      },
+      callOfDuty: {
+        sync: true,
+        teams: []
+      }
     }
   },
   datetime: {
@@ -160,9 +185,9 @@ const CONFIGS = {
   },
   settings: {
     notifyOnlyAboutTodayGames: true,             // if 'false' it will alse send email in case of matchs of favorite teams in the next days
-    strictTeamComparasion: false,                // if 'true' the name of the teams must be exact in all the matches source sites
-    maintanceMode: false,                        // development option dont need to change
-    loopFunction: 'checkTodayGames'              // development option dont need to change
+    strictTeamComparasion: true,                 // if 'true' the name of the teams must be exact in all the matches source sites
+    maintanceMode: false,                        // development option, dont need to change
+    loopFunction: 'checkTodayGames'              // development option, dont need to change
   }
 };
 
