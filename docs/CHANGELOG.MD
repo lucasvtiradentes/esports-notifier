@@ -1,5 +1,22 @@
 # CHANGELOG HISTORY
 
+## [1.2.0](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.1.0...v1.2.0) (2023-04-16)
+
+
+### 🐛 bugfix:
+
+* get event name correctly ([#24](https://github.com/lucasvtiradentes/esports-notifier/issues/24)) ([210c4f0](https://github.com/lucasvtiradentes/esports-notifier/commit/210c4f0ddedb4efbcfa784ac132947772f7fec5c))
+
+
+### ✨ feature:
+
+* add option to specify team per game ([#25](https://github.com/lucasvtiradentes/esports-notifier/issues/25)) ([e4b2753](https://github.com/lucasvtiradentes/esports-notifier/commit/e4b27537245165a431df19d80dab2785f97a8b77))
+* get call of duty matches ([#23](https://github.com/lucasvtiradentes/esports-notifier/issues/23)) ([665c529](https://github.com/lucasvtiradentes/esports-notifier/commit/665c529fd2ffce19e3c8c17d1b07c2e0b921402f))
+* get dota matches ([#22](https://github.com/lucasvtiradentes/esports-notifier/issues/22)) ([9e3ad1c](https://github.com/lucasvtiradentes/esports-notifier/commit/9e3ad1ced4b62482283b8d12930826e332a8dbc3))
+* get league of legends matches ([#19](https://github.com/lucasvtiradentes/esports-notifier/issues/19)) ([7f1771e](https://github.com/lucasvtiradentes/esports-notifier/commit/7f1771e9dba3cd10b2bf2b24debed059ffbf1083))
+* get overwatch matches ([#20](https://github.com/lucasvtiradentes/esports-notifier/issues/20)) ([f011d86](https://github.com/lucasvtiradentes/esports-notifier/commit/f011d860f596362b969d6fc5babc9c9f116d10ef))
+* get rocket league matches ([#21](https://github.com/lucasvtiradentes/esports-notifier/issues/21)) ([4c2cc6b](https://github.com/lucasvtiradentes/esports-notifier/commit/4c2cc6b31778458c598c6725fe0b74d4e5915ebe))
+
 ## [1.1.0](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.0.2...v1.1.0) (2023-04-15)
 
 
