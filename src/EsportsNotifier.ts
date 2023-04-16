@@ -11,6 +11,7 @@ type Config = {
       overwatch: boolean;
       rocketLeague: boolean;
       dota: boolean;
+      callOfDuty: boolean;
     };
   };
   datetime: {
@@ -218,6 +219,12 @@ export default class EsportsNotifier {
     return matchesInfoArr;
   }
 
+  private getCallOfDutyMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'callOfDuty', gameImage: 'https://profile.callofduty.com/resources/cod/images/shared-logo.jpg', pathUrl: 'callofduty/Liquipedia:Upcoming_and_ongoing_matches' });
+    this.logger(`found ${matches.length} cod matches`);
+    return matches;
+  }
+
   private getDotaMatches() {
     const matches = this.getGamesFromLiquipedia({ gameName: 'dota', gameImage: 'https://seeklogo.com/images/D/dota-2-logo-C88DABB066-seeklogo.com.png', pathUrl: 'dota2/Liquipedia:Upcoming_and_ongoing_matches' });
     this.logger(`found ${matches.length} dota matches`);
@@ -320,6 +327,10 @@ export default class EsportsNotifier {
 
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
+
+    if (this.config.esports.games.callOfDuty) {
+      allMatches.push(...this.getCallOfDutyMatches());
+    }
 
     if (this.config.esports.games.dota) {
       allMatches.push(...this.getDotaMatches());
