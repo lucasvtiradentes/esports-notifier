@@ -9,6 +9,7 @@ type Config = {
       rainbowSixSiege: boolean;
       leagueOfLegends: boolean;
       overwatch: boolean;
+      rocketLeague: boolean;
     };
   };
   datetime: {
@@ -216,6 +217,12 @@ export default class EsportsNotifier {
     return matchesInfoArr;
   }
 
+  private getRocketLeagueMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'rocketLeague', gameImage: 'https://upload.wikimedia.org/wikipedia/he/thumb/6/68/Rocket_league_logo_1.jpeg/675px-Rocket_league_logo_1.jpeg?20210526204716', pathUrl: 'rocketleague/Liquipedia:Matches' });
+    this.logger(`found ${matches.length} rocketLeague matches`);
+    return matches;
+  }
+
   private getOverwatchMatches() {
     const matches = this.getGamesFromLiquipedia({ gameName: 'overwatch', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Overwatch_circle_logo.svg/600px-Overwatch_circle_logo.svg.png?20160426111034', pathUrl: 'overwatch/Liquipedia:Upcoming_and_ongoing_matches' });
     this.logger(`found ${matches.length} overwatch matches`);
@@ -306,6 +313,10 @@ export default class EsportsNotifier {
 
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
+
+    if (this.config.esports.games.rocketLeague) {
+      allMatches.push(...this.getRocketLeagueMatches());
+    }
 
     if (this.config.esports.games.overwatch) {
       allMatches.push(...this.getOverwatchMatches());
