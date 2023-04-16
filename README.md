@@ -83,10 +83,11 @@ It is worth mentioning that the tool currently informs about the following games
 - [x] counter-strike global offense: [liquipedia](https://liquipedia.net/counterstrike/Liquipedia:Matches)
 - [x] valorant: [vlr.gg](https://www.vlr.gg/matches)
 - [x] rainbow six siege: [siege.gg](https://siege.gg/matches)
+- [x] league of legends: [liquipedia](https://liquipedia.net/leagueoflegends/Liquipedia:Matches)
+
 <!--
 - [ ] overwatch 2
 - [ ] dota 2
-- [ ] league of legends
 - [ ] free fire
 - [ ] rocket league
 - [ ] call of duty
@@ -149,7 +150,8 @@ const CONFIGS = {
     games: {                                     // select the games you're interested
       csgo: true,
       valorant: true,
-      rainbowSixSiege: true
+      rainbowSixSiege: true,
+      leagueOfLegends: true
     }
   },
   datetime: {

@@ -4,7 +4,8 @@ const CONFIGS = {
     games: {                                     // select the games you're interested
       csgo: true,
       valorant: true,
-      rainbowSixSiege: true
+      rainbowSixSiege: true,
+      leagueOfLegends: true
     }
   },
   datetime: {
