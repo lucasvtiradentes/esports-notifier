@@ -87,10 +87,7 @@ It is worth mentioning that the tool currently informs about the following games
 - [x] overwatch: [liquipedia](https://liquipedia.net/overwatch/Liquipedia:Upcoming_and_ongoing_matches)
 - [x] rocket league: [liquipedia](https://liquipedia.net/rocketleague/Liquipedia:Matches)
 - [x] dota: [liquipedia](https://liquipedia.net/dota2/Liquipedia:Upcoming_and_ongoing_matches)
-
-<!--
-- [ ] call of duty
-      -->
+- [x] call of duty: [liquipedia](https://liquipedia.net/callofduty/Liquipedia:Upcoming_and_ongoing_matches)
 
 ## :dart: Features<a href="#TOC"><img align="right" src="./.github/images/up_arrow.png" width="22"></a>
 
@@ -153,7 +150,8 @@ const CONFIGS = {
       leagueOfLegends: true,
       overwatch: true,
       rocketLeague: true,
-      dota: true
+      dota: true,
+      callOfDuty: true
     }
   },
   datetime: {

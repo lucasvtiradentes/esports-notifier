@@ -9,7 +9,8 @@ export const config = {
       leagueOfLegends: true,
       overwatch: true,
       rocketLeague: true,
-      dota: true
+      dota: true,
+      callOfDuty: true
     }
   },
   datetime: {
