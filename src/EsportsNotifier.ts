@@ -48,6 +48,7 @@ type Game = {
   date: string;
   time: string;
   event: string;
+  eventLink: string;
   link: string;
 };
 
@@ -156,7 +157,7 @@ export default class EsportsNotifier {
 
   /* GET MATCHES FUNCTIONS ================================================== */
 
-  private getGamesFromLiquipedia(props: { pathUrl: string; gameName: Games; gameImage: string }) {
+  private getGamesFromLiquipedia(props: { pathUrl: string; gameName: Games; gameImage: string; liquipediaPageType: 1 | 2 | 3 }) {
     const LIQUEDPEDIA_LINK = 'https://liquipedia.net';
     const sourceLink = `${LIQUEDPEDIA_LINK}/${props.pathUrl}`;
 
@@ -177,12 +178,42 @@ export default class EsportsNotifier {
     const matchesInfoArr = Array.from(matchesArr)
       .filter((item: CheerioItem) => item.parent.attribs['data-toggle-area-content'] === '1')
       .map((item: CheerioItem) => {
-        const dateTime = this.getDateFixedByTimezone(new Date(item.children[1].children[2].children[1].children[0].children[0].children[0].data.replace('- ', '')), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
-        const teamAElement = item.children[1].children[0].children[1].children[0];
-        const teamBElement = item.children[1].children[0].children[5].children[0];
+        let dateInfo: CheerioItem;
+        let eventName: string;
+        let eventTitle: string;
+        let teamAElement: CheerioItem;
+        let teamBElement: CheerioItem;
+
+        if (props.liquipediaPageType === 1) {
+          const eventDetailsEl: CheerioItem = item.children[1].children[2].children[1].children[1].children[0].children[0];
+          eventName = eventDetailsEl.attribs.title;
+          eventTitle = eventDetailsEl.attribs.href;
+          dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].data;
+          teamAElement = item.children[1].children[0].children[1].children[0];
+          teamBElement = item.children[1].children[0].children[5].children[0];
+        }
+
+        if (props.liquipediaPageType === 2) {
+          const eventDetailsEl: CheerioItem = item.children[1].children[2].children[1].children[1].children[1].children[0];
+          eventName = eventDetailsEl.attribs.title;
+          eventTitle = eventDetailsEl.attribs.href;
+          dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].data;
+          teamAElement = item.children[1].children[0].children[1].children[0];
+          teamBElement = item.children[1].children[0].children[5].children[0];
+        }
+
+        if (props.liquipediaPageType === 3) {
+          const eventDetailsEl = item.children[0].children[1].children[0].children[1].children[0].children[0].children[0];
+          eventName = eventDetailsEl.attribs.title;
+          eventTitle = eventDetailsEl.attribs.href;
+          dateInfo = item.children[0].children[1].children[0].children[0].children[0].children[0].data;
+          teamAElement = item.children[0].children[0].children[0].children[0];
+          teamBElement = item.children[0].children[0].children[2].children[0];
+        }
+
+        const dateTime = this.getDateFixedByTimezone(new Date(dateInfo.replace('- ', '')), this.config.datetime.diffHoursFromGmtTimezone).toISOString();
         const matchDate = dateTime.split('T')[0];
         const matchTime = dateTime.split('T')[1].slice(0, 5);
-        const event = item.children[1].children[2].children[1].children[1].children[0].children[0].children[0].data;
         const teamAName = getTeamName(teamAElement);
         const teamAImage = getTeamImage(teamAElement);
         const teamACountryImage = '';
@@ -209,7 +240,8 @@ export default class EsportsNotifier {
           teams: [teamAName, teamBName],
           date: matchDate,
           time: matchTime,
-          event: event,
+          event: eventName,
+          eventLink: `${LIQUEDPEDIA_LINK}${eventTitle}`,
           link: ``
         };
 
@@ -220,43 +252,43 @@ export default class EsportsNotifier {
   }
 
   private getCallOfDutyMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'callOfDuty', gameImage: 'https://profile.callofduty.com/resources/cod/images/shared-logo.jpg', pathUrl: 'callofduty/Liquipedia:Upcoming_and_ongoing_matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'callOfDuty', gameImage: 'https://profile.callofduty.com/resources/cod/images/shared-logo.jpg', pathUrl: 'callofduty/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 2 });
     this.logger(`found ${matches.length} cod matches`);
     return matches;
   }
 
   private getDotaMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'dota', gameImage: 'https://seeklogo.com/images/D/dota-2-logo-C88DABB066-seeklogo.com.png', pathUrl: 'dota2/Liquipedia:Upcoming_and_ongoing_matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'dota', gameImage: 'https://seeklogo.com/images/D/dota-2-logo-C88DABB066-seeklogo.com.png', pathUrl: 'dota2/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 2 });
     this.logger(`found ${matches.length} dota matches`);
     return matches;
   }
 
   private getRocketLeagueMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'rocketLeague', gameImage: 'https://upload.wikimedia.org/wikipedia/he/thumb/6/68/Rocket_league_logo_1.jpeg/675px-Rocket_league_logo_1.jpeg?20210526204716', pathUrl: 'rocketleague/Liquipedia:Matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'rocketLeague', gameImage: 'https://upload.wikimedia.org/wikipedia/he/thumb/6/68/Rocket_league_logo_1.jpeg/675px-Rocket_league_logo_1.jpeg?20210526204716', pathUrl: 'rocketleague/Liquipedia:Matches', liquipediaPageType: 3 });
     this.logger(`found ${matches.length} rocketLeague matches`);
     return matches;
   }
 
   private getOverwatchMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'overwatch', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Overwatch_circle_logo.svg/600px-Overwatch_circle_logo.svg.png?20160426111034', pathUrl: 'overwatch/Liquipedia:Upcoming_and_ongoing_matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'overwatch', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Overwatch_circle_logo.svg/600px-Overwatch_circle_logo.svg.png?20160426111034', pathUrl: 'overwatch/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 1 });
     this.logger(`found ${matches.length} overwatch matches`);
     return matches;
   }
 
   private getLolMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'leagueOfLegends', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png?20201029024159', pathUrl: 'leagueoflegends/Liquipedia:Matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'leagueOfLegends', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png?20201029024159', pathUrl: 'leagueoflegends/Liquipedia:Matches', liquipediaPageType: 2 });
     this.logger(`found ${matches.length} lol matches`);
     return matches;
   }
 
   private getCsgoMatches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'csgo', gameImage: 'https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png', pathUrl: 'counterstrike/Liquipedia:Matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'csgo', gameImage: 'https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png', pathUrl: 'counterstrike/Liquipedia:Matches', liquipediaPageType: 1 });
     this.logger(`found ${matches.length} csgo matches`);
     return matches;
   }
 
   private getR6Matches() {
-    const matches = this.getGamesFromLiquipedia({ gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches' });
+    const matches = this.getGamesFromLiquipedia({ gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 1 });
     this.logger(`found ${matches.length} r6 matches`);
     return matches;
   }
@@ -309,6 +341,7 @@ export default class EsportsNotifier {
         date: matchDate,
         time: matchTime,
         event: event,
+        eventLink: '',
         link: `${vlrgg}${item.attribs.href}`
       };
 
@@ -426,7 +459,7 @@ export default class EsportsNotifier {
                                   </div>
                               </a>
                               <br>
-                              <span style="word-wrap: break-word;">${item.event}</span>
+                              ${item.eventLink !== '' ? `<a href="${item.eventLink}" style="word-wrap: break-word;">${item.event}</a>` : `<span style="word-wrap: break-word;">${item.event}</span>`}
                             </td>
                             <td style="${columnStyle} padding: 10px 0;">
                               <div style="text-align: center;">
