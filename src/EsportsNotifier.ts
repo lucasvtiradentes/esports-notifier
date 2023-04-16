@@ -8,6 +8,7 @@ type Config = {
       valorant: boolean;
       rainbowSixSiege: boolean;
       leagueOfLegends: boolean;
+      overwatch: boolean;
     };
   };
   datetime: {
@@ -215,6 +216,12 @@ export default class EsportsNotifier {
     return matchesInfoArr;
   }
 
+  private getOverwatchMatches() {
+    const matches = this.getGamesFromLiquipedia({ gameName: 'overwatch', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Overwatch_circle_logo.svg/600px-Overwatch_circle_logo.svg.png?20160426111034', pathUrl: 'overwatch/Liquipedia:Upcoming_and_ongoing_matches' });
+    this.logger(`found ${matches.length} overwatch matches`);
+    return matches;
+  }
+
   private getLolMatches() {
     const matches = this.getGamesFromLiquipedia({ gameName: 'leagueOfLegends', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png?20201029024159', pathUrl: 'leagueoflegends/Liquipedia:Matches' });
     this.logger(`found ${matches.length} lol matches`);
@@ -299,6 +306,10 @@ export default class EsportsNotifier {
 
   private getAllTodayMatches() {
     const allMatches: Game[] = [];
+
+    if (this.config.esports.games.overwatch) {
+      allMatches.push(...this.getOverwatchMatches());
+    }
 
     if (this.config.esports.games.leagueOfLegends) {
       allMatches.push(...this.getLolMatches());
