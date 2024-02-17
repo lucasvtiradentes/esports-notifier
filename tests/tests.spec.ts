@@ -1,5 +1,5 @@
-import EsportsNotifier from '../src/EsportsNotifier';
-import { config } from '../resources/config';
+import EsportsNotifier from '../src/index';
+import { configs } from '../resources/configs';
 
 it('should throw an error when initializing without configs', () => {
   expect(() => {
@@ -9,5 +9,5 @@ it('should throw an error when initializing without configs', () => {
 });
 
 it('should not throw an error when initializing with valid configs', () => {
-  expect(new EsportsNotifier(config)).toHaveProperty('APPNAME');
+  expect(new EsportsNotifier(configs)).toHaveProperty('extended_configs');
 });

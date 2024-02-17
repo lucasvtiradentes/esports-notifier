@@ -8,7 +8,7 @@
         name: 'esports notifier',
         github_repository: 'lucasvtiradentes/esports notifier',
         version: '1.2.0',
-        build_date_time: '16/02/2024 23:07:26'
+        build_date_time: '16/02/2024 23:47:51'
     };
 
     const ERRORS = {
@@ -63,10 +63,10 @@
             let teamAElement;
             let teamBElement;
             if (props.liquipediaPageType === 1) {
-                const eventDetailsEl = item.children[1].children[2].children[1].children[1].children[0].children[0];
+                const eventDetailsEl = item.children[1].children[2].children[1].children[0].children[1].children[0].children[0];
                 eventName = eventDetailsEl.attribs.title;
                 eventTitle = eventDetailsEl.attribs.href;
-                dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].data;
+                dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].children[0].children[0].data;
                 teamAElement = item.children[1].children[0].children[1].children[0];
                 teamBElement = item.children[1].children[0].children[5].children[0];
             }

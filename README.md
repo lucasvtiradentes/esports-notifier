@@ -337,35 +337,6 @@ $ cd esports-notifier
 $ npm install
 ```
 
-If you want to [contribute](./docs/CONTRIBUTING.md) to the project, fork the project, make the necessary changes, and to test your work you can load your version in apps scripts with almost no effort do this: replace the content of the <code>getEsportsNotifier</code> function with the following code:
-
-```js
-function getEsportsNotifier() {
-  // const version = "1.2.0" // version
-  // const content = getEsportsProduction(version)
-  const content = getEsportsDevelopment('yourgithub/project-fork', 'branch_name');
-  eval(content);
-  const esportsNotifier = new EsportsNotifier(CONFIGS);
-  return esportsNotifier;
-}
-
-function getEsportsProduction(version) {
-  return UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
-}
-
-function getEsportsDevelopment(repository, branch) {
-  const filePath = 'dist/EsportsNotifier.min.js';
-  const final_link = `https://api.github.com/repos/${repository}/contents/${filePath}${branch ? `?ref=${branch}` : ''}`;
-  const response = UrlFetchApp.fetch(final_link, { method: 'get', contentType: 'application/json' });
-  const base64Content = JSON.parse(response.toString()).content;
-  const decodedArr = Utilities.base64Decode(base64Content);
-  const decodedAsString = Utilities.newBlob(decodedArr).getDataAsString();
-  return decodedAsString;
-}
-```
-
-This will allow you to select the **esports-notifier** source place (github repository or npm package) and specify the intended version.
-
   </div>
 </details>
 

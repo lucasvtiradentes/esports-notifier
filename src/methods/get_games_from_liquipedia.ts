@@ -37,10 +37,10 @@ export function getGamesFromLiquipedia(props: TGetGamesFromLiquipedia) {
       let teamBElement: TCheerioItem;
 
       if (props.liquipediaPageType === 1) {
-        const eventDetailsEl: TCheerioItem = item.children[1].children[2].children[1].children[1].children[0].children[0];
+        const eventDetailsEl = item.children[1].children[2].children[1].children[0].children[1].children[0].children[0];
         eventName = eventDetailsEl.attribs.title;
         eventTitle = eventDetailsEl.attribs.href;
-        dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].data;
+        dateInfo = item.children[1].children[2].children[1].children[0].children[0].children[0].children[0].children[0].data;
         teamAElement = item.children[1].children[0].children[1].children[0];
         teamBElement = item.children[1].children[0].children[5].children[0];
       }

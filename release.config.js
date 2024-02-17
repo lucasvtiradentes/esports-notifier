@@ -12,6 +12,7 @@ module.exports = {
           { type: 'types', release: 'patch' },
           { type: 'config', release: 'patch' },
           { type: 'binary', release: 'patch' },
+          { type: 'refactor', release: 'patch' },
           { type: 'assets', release: 'patch' },
           { type: 'ui', release: 'patch' },
           { type: 'i18n', release: 'patch' },
@@ -49,18 +50,18 @@ module.exports = {
           types: [
             { type: 'feature', section: '✨ feature:', hidden: false },
             { type: 'tests', section: '✅ tests:', hidden: false },
-            { type: 'docs', section: '📝 docs:', hidden: true },
-            { type: 'types', section: '🏷️ types:', hidden: true },
-            { type: 'config', section: '🔧 config:', hidden: true },
-            { type: 'binary', section: '📦️ binary:', hidden: true },
-            { type: 'assets', section: '🍱 assets:', hidden: true },
-            { type: 'ui', section: '💄 ui:', hidden: true },
-            { type: 'i18n', section: '🌐 i18n:', hidden: true },
+            { type: 'docs', section: '📝 docs:', hidden: false },
+            { type: 'types', section: '🏷️ types:', hidden: false },
+            { type: 'config', section: '🔧 config:', hidden: false },
+            { type: 'binary', section: '📦️ binary:', hidden: false },
+            { type: 'assets', section: '🍱 assets:', hidden: false },
+            { type: 'ui', section: '💄 ui:', hidden: false },
+            { type: 'i18n', section: '🌐 i18n:', hidden: false },
             { type: 'bugfix', section: '🐛 bugfix:', hidden: false },
-            { type: 'hotfix', section: '🚑️ hotfix:', hidden: true },
-            { type: 'fix', section: '🩹 fix:', hidden: true },
-            { type: 'detect', section: '🥅 detect:', hidden: true },
-            { type: 'revert', section: '⏪️ revert:', hidden: true },
+            { type: 'hotfix', section: '🚑️ hotfix:', hidden: false },
+            { type: 'fix', section: '🩹 fix:', hidden: false },
+            { type: 'detect', section: '🥅 detect:', hidden: false },
+            { type: 'revert', section: '⏪️ revert:', hidden: false },
             { type: 'breaking', section: '💥 breaking:', hidden: false }
           ]
         }
@@ -71,7 +72,7 @@ module.exports = {
     [
       '@semantic-release/git',
       {
-        assets: ['docs/CHANGELOG.MD', 'package.json', 'README.md', 'dist/EsportsNotifier.min.js', 'dist/GAS-appsscript.json', 'dist/GAS-setup.js'],
+        assets: ['package.json', 'README.md', 'docs/CHANGELOG.MD', 'dist/index.js', 'dist/index.min.js', 'dist/setup/gcalsync_dev.js', 'dist/setup/permissions.json', 'dist/setup/setup.js'],
         message: ':bookmark: tags: new version release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
     ]
