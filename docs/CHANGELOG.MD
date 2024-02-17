@@ -1,5 +1,12 @@
 # CHANGELOG HISTORY
 
+## [1.2.1](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.2.0...v1.2.1) (2024-02-17)
+
+
+### 🐛 bugfix:
+
+* liquipedia page scrapper error ([5a92b82](https://github.com/lucasvtiradentes/esports-notifier/commit/5a92b82c18a49d60ef224d16372ee719bbd27adf))
+
 ## [1.2.0](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.1.0...v1.2.0) (2023-04-16)
 
 
