@@ -10,7 +10,7 @@ ignore/
 node_modules/
 resources/
 scripts/
-src/*.ts
+src/
 tests/
 
 # FILES #################################
@@ -31,6 +31,7 @@ jest.config.js
 # README.md
 release.config.js
 tsconfig.json
+rollup.config.js
 
 pnpm-lock.yaml
 package-lock.json

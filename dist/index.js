@@ -8,7 +8,7 @@
         name: 'esports notifier',
         github_repository: 'lucasvtiradentes/esports notifier',
         version: '1.2.2',
-        build_date_time: '16/02/2024 23:57:48'
+        build_date_time: '17/02/2024 08:16:17'
     };
 
     const ERRORS = {
