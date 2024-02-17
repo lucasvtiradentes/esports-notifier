@@ -1,5 +1,12 @@
 # CHANGELOG HISTORY
 
+## [1.2.2](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.2.1...v1.2.2) (2024-02-17)
+
+
+### 🐛 bugfix:
+
+* overwatch sync error ([1d1777b](https://github.com/lucasvtiradentes/esports-notifier/commit/1d1777be5f30a7a2d91d0b4e215cd51b852db126))
+
 ## [1.2.1](https://github.com/lucasvtiradentes/esports-notifier/compare/v1.2.0...v1.2.1) (2024-02-17)
 
 
