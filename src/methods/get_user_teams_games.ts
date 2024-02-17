@@ -5,7 +5,6 @@ import { getCallOfDutyMatches } from '../games/call_of_duty';
 import { getCsgoMatches } from '../games/counter_strike';
 import { getDotaMatches } from '../games/dota';
 import { getLolMatches } from '../games/league_of_legends';
-import { getOverwatchMatches } from '../games/overwatch';
 import { getR6Matches } from '../games/rainbow_six_siege';
 import { getRocketLeagueMatches } from '../games/rocket_league';
 import { getValorantMatches } from '../games/valorant';
@@ -27,10 +26,6 @@ export function getAllTodayMatches(config: TConfigs) {
 
   if (config.esports.games.rocketLeague.sync) {
     allMatches.push(...getRocketLeagueMatches(config.datetime.diffHoursFromGmtTimezone));
-  }
-
-  if (config.esports.games.overwatch.sync) {
-    allMatches.push(...getOverwatchMatches(config.datetime.diffHoursFromGmtTimezone));
   }
 
   if (config.esports.games.leagueOfLegends.sync) {

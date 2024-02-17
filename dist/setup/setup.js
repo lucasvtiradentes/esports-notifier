@@ -18,10 +18,6 @@ const CONFIGS = {
           sync: true,
           teams: []
         },
-        overwatch: {
-          sync: true,
-          teams: []
-        },
         rocketLeague: {
           sync: true,
           teams: []

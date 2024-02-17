@@ -21,10 +21,6 @@ export const configs: TConfigs = {
         sync: true,
         teams: []
       },
-      overwatch: {
-        sync: true,
-        teams: []
-      },
       rocketLeague: {
         sync: true,
         teams: []

@@ -8,7 +8,7 @@
         name: 'esports notifier',
         github_repository: 'lucasvtiradentes/esports notifier',
         version: '1.2.1',
-        build_date_time: '16/02/2024 23:48:56'
+        build_date_time: '16/02/2024 23:56:40'
     };
 
     const ERRORS = {
@@ -147,12 +147,6 @@
         return matches;
     }
 
-    function getOverwatchMatches(timezoneCorrection) {
-        const matches = getGamesFromLiquipedia({ timezoneCorrection, gameName: 'overwatch', gameImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Overwatch_circle_logo.svg/600px-Overwatch_circle_logo.svg.png?20160426111034', pathUrl: 'overwatch/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 1 });
-        logger(`found ${matches.length} overwatch matches`);
-        return matches;
-    }
-
     function getR6Matches(timezoneCorrection) {
         const matches = getGamesFromLiquipedia({ timezoneCorrection, gameName: 'rainbowSixSiege', gameImage: 'https://www.clipartmax.com/png/small/308-3080527_0-tom-clancys-rainbow-six-siege.png', pathUrl: 'rainbowsix/Liquipedia:Upcoming_and_ongoing_matches', liquipediaPageType: 2 });
         logger(`found ${matches.length} r6 matches`);
@@ -231,9 +225,6 @@
         }
         if (config.esports.games.rocketLeague.sync) {
             allMatches.push(...getRocketLeagueMatches(config.datetime.diffHoursFromGmtTimezone));
-        }
-        if (config.esports.games.overwatch.sync) {
-            allMatches.push(...getOverwatchMatches(config.datetime.diffHoursFromGmtTimezone));
         }
         if (config.esports.games.leagueOfLegends.sync) {
             allMatches.push(...getLolMatches(config.datetime.diffHoursFromGmtTimezone));

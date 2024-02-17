@@ -11,7 +11,6 @@ export type TConfigs = {
       valorant: GameOption;
       rainbowSixSiege: GameOption;
       leagueOfLegends: GameOption;
-      overwatch: GameOption;
       rocketLeague: GameOption;
       dota: GameOption;
       callOfDuty: GameOption;
