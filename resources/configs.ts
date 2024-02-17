@@ -1,4 +1,7 @@
-const CONFIGS = {
+import { TConfigs } from '../src/consts/types';
+
+// prettier-ignore
+export const configs: TConfigs = {
   esports: {
     favoriteTeams: ['mibr'],              // specify your global favorite teams, that will be search in all games
     games: {                              // select the games you're interested
@@ -47,26 +50,3 @@ const CONFIGS = {
     loopFunction: 'checkTodayGames'              // development option, dont need to change
   }
 };
-
-function getEsportsNotifier(){
-  const version = "1.2.0"
-  const content = UrlFetchApp.fetch(`https://cdn.jsdelivr.net/npm/esports-notifier@${version}`).getContentText();
-  eval(content)
-  const esportsNotifier = new EsportsNotifier(CONFIGS)
-  return esportsNotifier;
-}
-
-function checkTodayGames() {
-  const esportsNotifier = getEsportsNotifier();
-  esportsNotifier.checkTodayGames();
-}
-
-function setup() {
-  const esportsNotifier = getEsportsNotifier();
-  esportsNotifier.install();
-}
-
-function uninstall() {
-  const esportsNotifier = getEsportsNotifier();
-  esportsNotifier.uninstall();
-}

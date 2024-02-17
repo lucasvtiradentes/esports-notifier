@@ -1,5 +1,5 @@
-import { config } from './config';
-import EsportsNotifier from '../src/EsportsNotifier';
+import { configs } from './configs';
+import EsportsNotifier from '../src/index';
 
-const esportsNotifier = new EsportsNotifier(config);
+const esportsNotifier = new EsportsNotifier(configs);
 console.log(esportsNotifier);
